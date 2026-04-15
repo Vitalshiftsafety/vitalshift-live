@@ -1,0 +1,4579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VitalShift — Ergonomics Intelligence | Equipment Leasing Portal</title>
+  <meta name="description" content="VitalShift B2B equipment leasing portal. Browse wearable exoskeleton suits for construction and industrial workforce safety. Reduce injury costs by 40%." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ═══════════════════════════════════════════
+       DESIGN TOKENS
+    ═══════════════════════════════════════════ */
+    :root {
+      --bg-page: #FAFBFC;
+      --bg-card: #FFFFFF;
+      --bg-elevated: #F1F5F9;
+
+      --text-heading: #0F172A;
+      --text-body: #475569;
+      --text-muted: #94A3B8;
+
+      --brand-indigo: #6366F1;
+      --brand-indigo-deep: #4F46E5;
+      --brand-indigo-light: #A5B4FC;
+      --brand-indigo-bg: rgba(99, 102, 241, 0.06);
+      --brand-indigo-glow: rgba(99, 102, 241, 0.15);
+
+      --color-safe: #10B981;
+      --color-warning: #F59E0B;
+      --color-danger: #EF4444;
+
+      --border-light: #E2E8F0;
+      --border-medium: #CBD5E1;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.1);
+      --shadow-card-hover: 0 8px 30px rgba(99, 102, 241, 0.12);
+
+      --nav-height: 72px;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 20px;
+      --radius-xl: 24px;
+
+      --max-width: 1200px;
+    }
+
+    /* ═══════════════════════════════════════════
+       RESET + BASE
+    ═══════════════════════════════════════════ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-body);
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      line-height: 1.6;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    /* ═══════════════════════════════════════════
+       ANIMATIONS
+    ═══════════════════════════════════════════ */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes countPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.04); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+
+    .animate-in {
+      animation: fadeInUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      opacity: 0;
+    }
+
+    .animate-in-delay-1 { animation-delay: 0.1s; }
+    .animate-in-delay-2 { animation-delay: 0.2s; }
+    .animate-in-delay-3 { animation-delay: 0.3s; }
+    .animate-in-delay-4 { animation-delay: 0.4s; }
+
+    /* ═══════════════════════════════════════════
+       APP SHELL
+    ═══════════════════════════════════════════ */
+    #app {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* ═══════════════════════════════════════════
+       TOP NAVIGATION
+    ═══════════════════════════════════════════ */
+    .top-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: var(--nav-height);
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      padding: 0 40px;
+      transition: box-shadow 0.3s ease;
+    }
+
+    .top-nav.scrolled {
+      box-shadow: var(--shadow-sm);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    /* Brand */
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+    }
+
+    .nav-brand:hover {
+      opacity: 0.85;
+    }
+
+    .nav-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--brand-indigo), var(--brand-indigo-deep));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.9rem;
+      color: white;
+      letter-spacing: 0.02em;
+      box-shadow: 0 2px 12px var(--brand-indigo-glow);
+    }
+
+    .nav-brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .nav-brand-name {
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-heading);
+    }
+
+    .nav-brand-sub {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    /* Nav Links */
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex: 1;
+      justify-content: center;
+    }
+
+    .nav-link {
+      position: relative;
+      padding: 8px 18px;
+      border-radius: var(--radius-sm);
+      color: var(--text-body);
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-link:hover {
+      color: var(--text-heading);
+      background: var(--bg-elevated);
+    }
+
+    .nav-link.active {
+      color: var(--brand-indigo);
+      background: var(--brand-indigo-bg);
+      font-weight: 600;
+    }
+
+    .nav-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 24px;
+      height: 2px;
+      background: var(--brand-indigo);
+      border-radius: 2px;
+    }
+
+    /* Profile Widget */
+    .nav-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+      padding: 6px 12px 6px 6px;
+      border-radius: 100px;
+      border: 1px solid var(--border-light);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .nav-profile:hover {
+      border-color: var(--border-medium);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .nav-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #E0E7FF, #C7D2FE);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.72rem;
+      color: var(--brand-indigo-deep);
+    }
+
+    .nav-profile-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .nav-profile-name {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-heading);
+      line-height: 1.2;
+    }
+
+    .nav-profile-company {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      line-height: 1.2;
+    }
+
+    /* ═══════════════════════════════════════════
+       MAIN CONTENT
+    ═══════════════════════════════════════════ */
+    .page-content {
+      flex: 1;
+    }
+
+    .container {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    /* ═══════════════════════════════════════════
+       HERO SECTION
+    ═══════════════════════════════════════════ */
+    .hero {
+      padding: 100px 40px 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -120px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 600px;
+      background: radial-gradient(ellipse, rgba(99, 102, 241, 0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      max-width: 780px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: var(--brand-indigo-bg);
+      border: 1px solid rgba(99, 102, 241, 0.12);
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--brand-indigo);
+      margin-bottom: 28px;
+      animation: fadeInUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .hero-badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--color-safe);
+      animation: pulse 2s ease infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+      50% { opacity: 0.8; box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+    }
+
+    .hero h1 {
+      font-size: 3.8rem;
+      font-weight: 900;
+      line-height: 1.08;
+      letter-spacing: -0.035em;
+      color: var(--text-heading);
+      margin-bottom: 20px;
+    }
+
+    .hero h1 .text-gradient {
+      background: linear-gradient(135deg, var(--brand-indigo), var(--brand-indigo-deep), #7C3AED);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-sub {
+      font-size: 1.18rem;
+      color: var(--text-body);
+      max-width: 560px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+      font-weight: 400;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    /* ═══════════════════════════════════════════
+       BUTTONS
+    ═══════════════════════════════════════════ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 13px 28px;
+      border-radius: var(--radius-sm);
+      font-size: 0.92rem;
+      font-weight: 600;
+      transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+      white-space: nowrap;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .btn-primary {
+      background: var(--brand-indigo-deep);
+      color: white;
+      box-shadow: 0 2px 8px rgba(79, 70, 229, 0.25);
+    }
+
+    .btn-primary:hover {
+      background: #4338CA;
+      box-shadow: 0 4px 16px rgba(79, 70, 229, 0.35);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: var(--bg-card);
+      color: var(--text-heading);
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--border-medium);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
+    }
+
+    .btn-ghost {
+      color: var(--brand-indigo);
+      padding: 13px 20px;
+    }
+
+    .btn-ghost:hover {
+      background: var(--brand-indigo-bg);
+    }
+
+    .btn-large {
+      padding: 16px 36px;
+      font-size: 1rem;
+      border-radius: var(--radius-md);
+    }
+
+    /* ═══════════════════════════════════════════
+       PRODUCT SHOWCASE
+    ═══════════════════════════════════════════ */
+    .products-section {
+      padding: 80px 40px;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+
+    .section-eyebrow {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--brand-indigo);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 2.4rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text-heading);
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+
+    .section-subtitle {
+      font-size: 1.05rem;
+      color: var(--text-body);
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .product-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 32px 28px;
+      transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .product-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--brand-indigo), var(--brand-indigo-deep));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-card-hover);
+      border-color: rgba(99, 102, 241, 0.2);
+    }
+
+    .product-card:hover::before {
+      opacity: 1;
+    }
+
+    .product-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      margin-bottom: 20px;
+    }
+
+    .product-icon-lift {
+      background: linear-gradient(135deg, #EDE9FE, #DDD6FE);
+    }
+
+    .product-icon-flex {
+      background: linear-gradient(135deg, #DBEAFE, #BFDBFE);
+    }
+
+    .product-icon-shield {
+      background: linear-gradient(135deg, #D1FAE5, #A7F3D0);
+    }
+
+    .product-icon-arm {
+      background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+    }
+
+    .product-icon-orange {
+      background: linear-gradient(135deg, #FFEDD5, #FED7AA);
+    }
+
+    .product-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-heading);
+      margin-bottom: 6px;
+      letter-spacing: -0.01em;
+    }
+
+    .product-focus {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .product-price {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .product-price-value {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--text-heading);
+      letter-spacing: -0.02em;
+    }
+
+    .product-price-period {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .product-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--brand-indigo);
+      transition: gap 0.2s ease;
+    }
+
+    .product-link:hover {
+      gap: 10px;
+    }
+
+    .product-link-arrow {
+      transition: transform 0.2s ease;
+      font-size: 1rem;
+    }
+
+    .product-card:hover .product-link-arrow {
+      transform: translateX(2px);
+    }
+
+    /* ═══════════════════════════════════════════
+       STATS BANNER
+    ═══════════════════════════════════════════ */
+    .stats-section {
+      padding: 80px 40px;
+      background: linear-gradient(180deg, var(--bg-page) 0%, #F1F5F9 50%, var(--bg-page) 100%);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 32px 16px;
+    }
+
+    .stat-number {
+      font-size: 3rem;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      color: var(--text-heading);
+      line-height: 1;
+      margin-bottom: 8px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stat-number .stat-suffix {
+      font-size: 1.8rem;
+      color: var(--brand-indigo);
+    }
+
+    .stat-number .stat-prefix {
+      font-size: 1.8rem;
+      color: var(--brand-indigo);
+    }
+
+    .stat-label {
+      font-size: 0.88rem;
+      color: var(--text-body);
+      font-weight: 500;
+    }
+
+    /* ═══════════════════════════════════════════
+       TESTIMONIAL + CTA
+    ═══════════════════════════════════════════ */
+    .testimonial-section {
+      padding: 80px 40px 100px;
+    }
+
+    .testimonial-card {
+      max-width: 800px;
+      margin: 0 auto;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      padding: 56px 64px;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      position: relative;
+    }
+
+    .testimonial-card::before {
+      content: '"';
+      position: absolute;
+      top: 20px;
+      left: 40px;
+      font-size: 6rem;
+      font-weight: 900;
+      color: rgba(99, 102, 241, 0.08);
+      line-height: 1;
+      font-family: Georgia, serif;
+    }
+
+    .testimonial-quote {
+      font-size: 1.3rem;
+      font-weight: 500;
+      color: var(--text-heading);
+      line-height: 1.65;
+      margin-bottom: 28px;
+      font-style: italic;
+      position: relative;
+      z-index: 1;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 40px;
+    }
+
+    .testimonial-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--brand-indigo), #7C3AED);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .testimonial-info {
+      text-align: left;
+    }
+
+    .testimonial-name {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-heading);
+    }
+
+    .testimonial-role {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .testimonial-divider {
+      width: 60px;
+      height: 1px;
+      background: var(--border-light);
+      margin: 0 auto 32px;
+    }
+
+    .cta-block {
+      text-align: center;
+    }
+
+    .cta-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-heading);
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .cta-sub {
+      font-size: 0.95rem;
+      color: var(--text-body);
+      margin-bottom: 24px;
+    }
+
+    /* ═══════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════ */
+    .site-footer {
+      background: var(--text-heading);
+      color: #CBD5E1;
+      padding: 64px 40px 32px;
+    }
+
+    .footer-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+
+    .footer-brand-section .nav-logo {
+      margin-bottom: 16px;
+    }
+
+    .footer-brand-desc {
+      font-size: 0.88rem;
+      line-height: 1.7;
+      color: #94A3B8;
+      margin-bottom: 20px;
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 12px;
+    }
+
+    .footer-social-link {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      color: #94A3B8;
+      transition: all 0.2s ease;
+    }
+
+    .footer-social-link:hover {
+      border-color: var(--brand-indigo);
+      color: var(--brand-indigo-light);
+      background: rgba(99, 102, 241, 0.1);
+    }
+
+    .footer-col-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #E2E8F0;
+      margin-bottom: 20px;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .footer-links a {
+      font-size: 0.88rem;
+      color: #94A3B8;
+      transition: color 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--brand-indigo-light);
+    }
+
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 32px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.82rem;
+      color: #64748B;
+    }
+
+    .footer-legal-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-legal-links a {
+      color: #64748B;
+      transition: color 0.2s ease;
+    }
+
+    .footer-legal-links a:hover {
+      color: #94A3B8;
+    }
+
+    /* ═══════════════════════════════════════════
+       PLACEHOLDER PAGES
+    ═══════════════════════════════════════════ */
+    .placeholder-page {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 120px 40px;
+    }
+
+    .placeholder-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      padding: 64px 80px;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      animation: fadeInUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      max-width: 480px;
+    }
+
+    .placeholder-logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--brand-indigo), var(--brand-indigo-deep));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1rem;
+      color: white;
+      margin: 0 auto 24px;
+      box-shadow: 0 4px 20px var(--brand-indigo-glow);
+    }
+
+    .placeholder-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-heading);
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .placeholder-phase {
+      display: inline-block;
+      padding: 4px 14px;
+      background: var(--brand-indigo-bg);
+      border: 1px solid rgba(99, 102, 241, 0.12);
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--brand-indigo);
+      margin-bottom: 16px;
+    }
+
+    .placeholder-desc {
+      font-size: 0.95rem;
+      color: var(--text-body);
+      line-height: 1.6;
+    }
+
+    /* ═══════════════════════════════════════════
+       MOBILE NAV
+    ═══════════════════════════════════════════ */
+    .mobile-menu-btn {
+      display: none;
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      align-items: center;
+      justify-content: center;
+      color: var(--text-heading);
+      font-size: 1.4rem;
+      transition: background 0.2s ease;
+    }
+
+    .mobile-menu-btn:hover {
+      background: var(--bg-elevated);
+    }
+
+    .mobile-nav-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 199;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .mobile-nav-overlay.active {
+      opacity: 1;
+    }
+
+    .mobile-nav-drawer {
+      display: none;
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 300px;
+      height: 100%;
+      background: var(--bg-card);
+      z-index: 200;
+      padding: 24px;
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow: -8px 0 40px rgba(0, 0, 0, 0.12);
+      overflow-y: auto;
+    }
+
+    .mobile-nav-drawer.active {
+      transform: translateX(0);
+    }
+
+    .mobile-nav-close {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      margin-left: auto;
+      margin-bottom: 24px;
+      font-size: 1.2rem;
+      color: var(--text-body);
+      transition: background 0.2s ease;
+    }
+
+    .mobile-nav-close:hover {
+      background: var(--bg-elevated);
+    }
+
+    .mobile-nav-links {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .mobile-nav-link {
+      padding: 14px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-body);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .mobile-nav-link:hover {
+      background: var(--bg-elevated);
+      color: var(--text-heading);
+    }
+
+    .mobile-nav-link.active {
+      background: var(--brand-indigo-bg);
+      color: var(--brand-indigo);
+      font-weight: 600;
+    }
+
+    /* ═══════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════ */
+    @media (max-width: 1024px) {
+      .hero h1 { font-size: 3rem; }
+      .products-grid { grid-template-columns: repeat(2, 1fr); }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+      .container { padding: 0 24px; }
+      .hero, .products-section, .stats-section, .testimonial-section { padding-left: 24px; padding-right: 24px; }
+    }
+
+    @media (max-width: 768px) {
+      .top-nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .nav-profile-info { display: none; }
+      .mobile-menu-btn { display: flex; }
+      .mobile-nav-overlay, .mobile-nav-drawer { display: block; }
+
+      .hero { padding: 64px 20px 56px; }
+      .hero h1 { font-size: 2.3rem; }
+      .hero-sub { font-size: 1.02rem; }
+
+      .products-grid { grid-template-columns: 1fr; max-width: 400px; }
+      .products-section { padding: 56px 20px; }
+
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+      .stat-item { padding: 24px 12px; }
+      .stat-number { font-size: 2.2rem; }
+      .stats-section { padding: 56px 20px; }
+
+      .testimonial-card { padding: 40px 28px; }
+      .testimonial-quote { font-size: 1.1rem; }
+      .testimonial-section { padding: 56px 20px 80px; }
+
+      .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+      .site-footer { padding: 48px 20px 24px; }
+      .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+      .footer-legal-links { justify-content: center; }
+
+      .placeholder-card { padding: 48px 32px; }
+    }
+
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 1.9rem; }
+      .hero-sub { font-size: 0.95rem; }
+      .hero-actions { flex-direction: column; }
+      .hero-actions .btn { width: 100%; }
+
+      .section-title { font-size: 1.8rem; }
+      .stat-number { font-size: 1.9rem; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+
+      .testimonial-quote { font-size: 1rem; }
+      .cta-title { font-size: 1.25rem; }
+    }
+
+    /* ═══════════════════════════════════════════
+       MISSION PAGE — HERO
+    ═══════════════════════════════════════════ */
+    .mission-hero {
+      padding: 96px 40px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mission-hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--brand-indigo), #7C3AED, var(--brand-indigo-light));
+    }
+
+    .mission-hero::after {
+      content: '';
+      position: absolute;
+      top: -80px;
+      right: -120px;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(ellipse, rgba(99,102,241,0.05) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .mission-hero-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .mission-hero .section-eyebrow {
+      display: block;
+      margin-bottom: 16px;
+    }
+
+    .mission-hero-headline {
+      font-size: 3.4rem;
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      color: var(--text-heading);
+      margin-bottom: 24px;
+      max-width: 680px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
+
+    .mission-hero-body {
+      font-size: 1.12rem;
+      color: var(--text-body);
+      max-width: 600px;
+      line-height: 1.75;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
+
+    /* ═══════════════════════════════════════════
+       MISSION PAGE — VALUES GRID
+    ═══════════════════════════════════════════ */
+    .values-section {
+      padding: 80px 40px;
+      background: linear-gradient(180deg, var(--bg-page) 0%, #F1F5F9 50%, var(--bg-page) 100%);
+    }
+
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .value-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 36px 32px;
+      transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .value-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--brand-indigo), var(--brand-indigo-deep));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .value-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-card-hover);
+      border-color: rgba(99,102,241,0.18);
+    }
+
+    .value-card:hover::before {
+      opacity: 1;
+    }
+
+    .value-card-icon {
+      font-size: 2rem;
+      margin-bottom: 18px;
+      display: block;
+    }
+
+    .value-card-title {
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: var(--text-heading);
+      margin-bottom: 10px;
+      letter-spacing: -0.01em;
+    }
+
+    .value-card-desc {
+      font-size: 0.9rem;
+      color: var(--text-body);
+      line-height: 1.65;
+    }
+
+    /* ═══════════════════════════════════════════
+       MISSION PAGE — TIMELINE
+    ═══════════════════════════════════════════ */
+    .timeline-section {
+      padding: 80px 40px;
+    }
+
+    .timeline-wrapper {
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .timeline-track {
+      position: absolute;
+      left: 80px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg, var(--brand-indigo) 0%, var(--border-light) 100%);
+    }
+
+    .timeline-item {
+      display: flex;
+      gap: 32px;
+      margin-bottom: 32px;
+      position: relative;
+    }
+
+    .timeline-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .timeline-year-col {
+      flex-shrink: 0;
+      width: 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 22px;
+      position: relative;
+    }
+
+    .timeline-year-badge {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--brand-indigo);
+      background: var(--brand-indigo-bg);
+      border: 1px solid rgba(99,102,241,0.15);
+      border-radius: 100px;
+      padding: 4px 10px;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      right: -5px;
+      top: 26px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--brand-indigo);
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+    }
+
+    .timeline-card {
+      flex: 1;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 24px 28px;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .timeline-card:hover {
+      box-shadow: var(--shadow-card-hover);
+      border-color: rgba(99,102,241,0.18);
+      transform: translateX(4px);
+    }
+
+    .timeline-milestone {
+      font-size: 0.96rem;
+      color: var(--text-body);
+      line-height: 1.6;
+    }
+
+    /* ═══════════════════════════════════════════
+       MISSION PAGE — TEAM
+    ═══════════════════════════════════════════ */
+    .team-section {
+      padding: 80px 40px;
+      background: linear-gradient(180deg, var(--bg-page) 0%, #F1F5F9 100%);
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .team-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 36px 28px 32px;
+      text-align: center;
+      transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .team-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-card-hover);
+      border-color: rgba(99,102,241,0.18);
+    }
+
+    .team-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: white;
+      margin: 0 auto 20px;
+      letter-spacing: 0.02em;
+    }
+
+    .team-avatar-ev  { background: linear-gradient(135deg, #6366F1, #4F46E5); }
+    .team-avatar-jo  { background: linear-gradient(135deg, #0EA5E9, #0284C7); }
+    .team-avatar-sc  { background: linear-gradient(135deg, #10B981, #059669); }
+    .team-avatar-mr  { background: linear-gradient(135deg, #F59E0B, #D97706); }
+    .team-avatar-pn  { background: linear-gradient(135deg, #EC4899, #DB2777); }
+    .team-avatar-tl  { background: linear-gradient(135deg, #8B5CF6, #7C3AED); }
+
+    .team-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-heading);
+      margin-bottom: 4px;
+      letter-spacing: -0.01em;
+    }
+
+    .team-role {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--brand-indigo);
+      margin-bottom: 14px;
+      letter-spacing: 0.01em;
+    }
+
+    .team-bio {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ═══════════════════════════════════════════
+       MISSION PAGE — BOTTOM CTA
+    ═══════════════════════════════════════════ */
+    .mission-cta-section {
+      padding: 80px 40px 100px;
+    }
+
+    .mission-cta-band {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 50%, #EDE9FE 100%);
+      border: 1px solid rgba(99,102,241,0.14);
+      border-radius: var(--radius-xl);
+      padding: 72px 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mission-cta-band::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      right: -60px;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(ellipse, rgba(99,102,241,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .mission-cta-band::after {
+      content: '';
+      position: absolute;
+      bottom: -60px;
+      left: -40px;
+      width: 250px;
+      height: 250px;
+      background: radial-gradient(ellipse, rgba(124,58,237,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .mission-cta-band-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .mission-cta-title {
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: var(--text-heading);
+      letter-spacing: -0.03em;
+      margin-bottom: 14px;
+      line-height: 1.15;
+    }
+
+    .mission-cta-sub {
+      font-size: 1.05rem;
+      color: var(--text-body);
+      margin-bottom: 40px;
+      line-height: 1.65;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .mission-cta-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    /* ═══════════════════════════════════════════
+       MISSION PAGE — RESPONSIVE
+    ═══════════════════════════════════════════ */
+    @media (max-width: 1024px) {
+      .mission-hero-headline { font-size: 2.6rem; }
+      .values-grid { grid-template-columns: repeat(2, 1fr); }
+      .team-grid { grid-template-columns: repeat(2, 1fr); }
+      .mission-hero, .values-section, .timeline-section, .team-section, .mission-cta-section { padding-left: 24px; padding-right: 24px; }
+      .mission-cta-band { padding: 56px 48px; }
+    }
+
+    @media (max-width: 768px) {
+      .mission-hero-headline { font-size: 2rem; }
+      .values-grid { grid-template-columns: 1fr; max-width: 480px; margin-left: auto; margin-right: auto; }
+      .team-grid { grid-template-columns: 1fr; max-width: 400px; margin-left: auto; margin-right: auto; }
+      .timeline-track { left: 60px; }
+      .timeline-year-col { width: 60px; }
+      .mission-cta-band { padding: 48px 32px; }
+      .mission-cta-title { font-size: 1.8rem; }
+    }
+
+    @media (max-width: 480px) {
+      .mission-hero { padding-top: 64px; }
+      .mission-hero-headline { font-size: 1.75rem; }
+      .mission-hero-body { font-size: 0.97rem; }
+      .timeline-item { flex-direction: column; gap: 12px; }
+      .timeline-year-col { width: auto; flex-direction: row; align-items: center; gap: 12px; padding-top: 0; }
+      .timeline-dot { display: none; }
+      .timeline-track { display: none; }
+      .mission-cta-band { padding: 40px 24px; }
+      .mission-cta-title { font-size: 1.55rem; }
+      .mission-cta-actions { flex-direction: column; }
+      .mission-cta-actions .btn { width: 100%; }
+    }
+
+    /* ═══════════════════════════════════════════
+       INVENTORY PAGE — HEADER & FILTERS
+    ═══════════════════════════════════════════ */
+    .inventory-header {
+      padding: 72px 40px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .inventory-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--brand-indigo), var(--brand-indigo-deep), #7C3AED);
+    }
+
+    .inventory-header-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .inventory-header .section-eyebrow {
+      display: block;
+      margin-bottom: 14px;
+    }
+
+    .inventory-headline {
+      font-size: 2.8rem;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      color: var(--text-heading);
+      margin-bottom: 12px;
+      line-height: 1.1;
+      text-align: center;
+    }
+
+    .inventory-subtext {
+      font-size: 1.05rem;
+      color: var(--text-body);
+      margin-bottom: 40px;
+      line-height: 1.65;
+      text-align: center;
+      max-width: 640px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Filter Bar */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding: 20px 0 24px;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      flex: 1;
+    }
+
+    .filter-tab {
+      padding: 8px 18px;
+      border-radius: 100px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      border: 1.5px solid var(--border-light);
+      color: var(--text-body);
+      background: var(--bg-card);
+      cursor: pointer;
+      transition: all 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+      white-space: nowrap;
+    }
+
+    .filter-tab:hover {
+      border-color: var(--brand-indigo);
+      color: var(--brand-indigo);
+      background: var(--brand-indigo-bg);
+    }
+
+    .filter-tab.active {
+      background: var(--brand-indigo);
+      border-color: var(--brand-indigo);
+      color: #fff;
+      box-shadow: 0 2px 10px rgba(99, 102, 241, 0.3);
+    }
+
+    /* Search bar */
+    .search-bar {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .search-bar-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      pointer-events: none;
+    }
+
+    .search-bar input {
+      font-family: 'Inter', system-ui, sans-serif;
+      padding: 9px 16px 9px 40px;
+      border: 1.5px solid var(--border-light);
+      border-radius: 100px;
+      font-size: 0.88rem;
+      color: var(--text-heading);
+      background: var(--bg-card);
+      width: 260px;
+      transition: all 0.2s ease;
+      outline: none;
+    }
+
+    .search-bar input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .search-bar input:focus {
+      border-color: var(--brand-indigo);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+
+    /* ═══════════════════════════════════════════
+       INVENTORY PAGE — PRODUCT GRID
+    ═══════════════════════════════════════════ */
+    .inventory-grid-section {
+      padding: 40px 40px 64px;
+    }
+
+    .inventory-grid-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .inventory-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 28px;
+    }
+
+    .inventory-empty {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 64px 24px;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .inventory-empty-icon {
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    /* Inventory Card */
+    .inventory-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 0;
+      transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .inventory-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--brand-indigo), var(--brand-indigo-deep));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .inventory-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-card-hover);
+      border-color: rgba(99, 102, 241, 0.2);
+    }
+
+    .inventory-card:hover::before {
+      opacity: 1;
+    }
+
+    .inventory-card.hidden {
+      display: none;
+    }
+
+    .inventory-card-body {
+      padding: 32px 32px 28px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Card Header */
+    .inventory-card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .inv-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.65rem;
+      flex-shrink: 0;
+    }
+
+    .inventory-card-title-group {
+      flex: 1;
+    }
+
+    .inventory-card-name {
+      font-size: 1.18rem;
+      font-weight: 800;
+      color: var(--text-heading);
+      letter-spacing: -0.01em;
+      margin-bottom: 6px;
+      line-height: 1.2;
+    }
+
+    .category-badge {
+      display: inline-block;
+      padding: 3px 11px;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      background: var(--brand-indigo-bg);
+      color: var(--brand-indigo);
+      border: 1px solid rgba(99, 102, 241, 0.16);
+    }
+
+    /* Description */
+    .inventory-card-desc {
+      font-size: 0.9rem;
+      color: var(--text-body);
+      line-height: 1.68;
+      margin-bottom: 22px;
+    }
+
+    /* Spec Grid */
+    /* Chip Lockup (replaces spec grid) */
+    .inv-chips {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .inv-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 11px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-light);
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-heading);
+      white-space: nowrap;
+    }
+
+    .inv-chip-icon {
+      font-size: 0.85rem;
+      line-height: 1;
+    }
+
+    /* Price Row */
+    .inventory-price-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .inventory-price-block {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .inventory-price-value {
+      font-size: 2rem;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      color: var(--text-heading);
+      line-height: 1;
+    }
+
+    .inventory-price-sub {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Availability Badge */
+    .availability-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .availability-badge.in-stock {
+      background: #DCFCE7;
+      color: #15803D;
+      border: 1px solid #BBF7D0;
+    }
+
+    .availability-badge.limited {
+      background: #FEF3C7;
+      color: #B45309;
+      border: 1px solid #FDE68A;
+    }
+
+    /* CTA Button Row */
+    .inventory-card-footer {
+      padding: 0 32px 28px;
+    }
+
+    .btn-lease {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 13px 24px;
+      border-radius: var(--radius-sm);
+      background: var(--brand-indigo-deep);
+      color: #fff;
+      font-size: 0.92rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+      text-decoration: none;
+      border: none;
+      box-shadow: 0 2px 8px rgba(79, 70, 229, 0.22);
+    }
+
+    .btn-lease:hover {
+      background: #4338CA;
+      box-shadow: 0 4px 16px rgba(79, 70, 229, 0.35);
+      transform: translateY(-1px);
+    }
+
+    .btn-lease:active {
+      transform: scale(0.97);
+    }
+
+    /* ═══════════════════════════════════════════
+       INVENTORY PAGE — FLEET BANNER
+    ═══════════════════════════════════════════ */
+    .fleet-banner-section {
+      padding: 0 40px 80px;
+    }
+
+    .fleet-banner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      padding: 48px 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 40px;
+    }
+
+    .fleet-banner-left {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      flex: 1;
+    }
+
+    .fleet-banner-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, var(--brand-indigo), var(--brand-indigo-deep));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      color: #fff;
+      flex-shrink: 0;
+      box-shadow: 0 4px 16px var(--brand-indigo-glow);
+    }
+
+    .fleet-banner-text {
+      flex: 1;
+    }
+
+    .fleet-banner-headline {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--text-heading);
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+      line-height: 1.25;
+    }
+
+    .fleet-banner-sub {
+      font-size: 0.9rem;
+      color: var(--text-body);
+      line-height: 1.6;
+    }
+
+    .fleet-banner-right {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .btn-fleet-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 26px;
+      border-radius: var(--radius-sm);
+      background: var(--brand-indigo-deep);
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow: 0 2px 8px rgba(79, 70, 229, 0.22);
+      white-space: nowrap;
+    }
+
+    .btn-fleet-primary:hover {
+      background: #4338CA;
+      box-shadow: 0 4px 16px rgba(79, 70, 229, 0.35);
+      transform: translateY(-1px);
+    }
+
+    .btn-fleet-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 26px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-card);
+      color: var(--text-heading);
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      border: 1px solid var(--border-light);
+      transition: all 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow: var(--shadow-sm);
+      white-space: nowrap;
+    }
+
+    .btn-fleet-secondary:hover {
+      border-color: var(--border-medium);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
+    }
+
+    /* ═══════════════════════════════════════════
+       INVENTORY PAGE — RESPONSIVE
+    ═══════════════════════════════════════════ */
+    @media (max-width: 1024px) {
+      .inventory-header, .inventory-grid-section, .fleet-banner-section { padding-left: 24px; padding-right: 24px; }
+      .inventory-headline { font-size: 2.2rem; }
+      .fleet-banner { padding: 40px 40px; }
+    }
+
+    @media (max-width: 768px) {
+      .inventory-headline { font-size: 1.85rem; }
+      .inventory-grid { grid-template-columns: 1fr; max-width: 520px; margin: 0 auto; }
+      .filter-bar { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .search-bar input { width: 100%; }
+      .search-bar { width: 100%; }
+      .fleet-banner { flex-direction: column; align-items: flex-start; gap: 28px; padding: 36px 28px; }
+      .fleet-banner-right { flex-direction: row; flex-wrap: wrap; }
+    }
+
+    @media (max-width: 480px) {
+      .inventory-headline { font-size: 1.6rem; }
+      .inventory-header { padding-top: 56px; }
+      .spec-grid { grid-template-columns: 1fr 1fr; }
+      .inventory-card-body { padding: 24px 20px 20px; }
+      .inventory-card-footer { padding: 0 20px 22px; }
+      .inventory-price-row { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .fleet-banner-right { flex-direction: column; width: 100%; }
+      .btn-fleet-primary, .btn-fleet-secondary { width: 100%; justify-content: center; }
+    }
+
+    /* ═══════════════════════════════════════════
+       ORDERS DASHBOARD PHASE 4
+    ═══════════════════════════════════════════ */
+    .orders-header {
+      padding: 64px 40px 32px;
+    }
+
+    .orders-header-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .orders-headline {
+      font-size: 2.4rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text-heading);
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+
+    .orders-subtext {
+      font-size: 1.05rem;
+      color: var(--text-body);
+      max-width: 600px;
+      line-height: 1.6;
+    }
+
+    .kpi-section {
+      padding: 0 40px 48px;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .kpi-card-warning {
+      border-color: rgba(245, 158, 11, 0.3);
+      background: rgba(245, 158, 11, 0.02);
+    }
+
+    .kpi-label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 12px;
+    }
+
+    .kpi-val {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--text-heading);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    .kpi-val-warning {
+      color: var(--color-warning);
+    }
+
+    .kpi-sub-val {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-body);
+      margin-top: 6px;
+      letter-spacing: normal;
+    }
+
+    .orders-fleet-section {
+      padding: 0 40px 64px;
+    }
+
+    .orders-fleet-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .section-title-sm {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-heading);
+      margin-bottom: 20px;
+    }
+
+    .table-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+
+    .table-header {
+      display: flex;
+      background: var(--bg-elevated);
+      border-bottom: 1px solid var(--border-light);
+      padding: 16px 24px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .table-row {
+      display: flex;
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border-light);
+      align-items: center;
+      transition: background 0.2s ease;
+    }
+
+    .table-row:last-child {
+      border-bottom: none;
+    }
+
+    .table-row:hover {
+      background: #F8FAFC;
+    }
+
+    .col-id { width: 15%; font-weight: 600; color: var(--brand-indigo); }
+    .col-product { width: 22%; font-weight: 600; color: var(--text-heading); }
+    .col-qty { width: 12%; color: var(--text-body); }
+    .col-site { width: 20%; color: var(--text-body); }
+    .col-renewal { width: 16%; color: var(--text-body); }
+    .col-status { width: 15%; display: flex; justify-content: flex-end; }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .status-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    .status-active {
+      background: rgba(16, 185, 129, 0.1);
+      color: #065F46;
+    }
+    .status-active::before {
+      background: var(--color-safe);
+    }
+
+    .status-pending {
+      background: rgba(245, 158, 11, 0.1);
+      color: #92400E;
+    }
+    .status-pending::before {
+      background: var(--color-warning);
+    }
+
+    .orders-lower-section {
+      padding: 0 40px 100px;
+    }
+
+    .orders-lower-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+
+    .orders-history {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .history-list {
+      list-style: none;
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      position: relative;
+    }
+
+    .history-list::before {
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 8px;
+      bottom: 8px;
+      width: 2px;
+      background: var(--border-light);
+    }
+
+    .history-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      position: relative;
+    }
+
+    .history-bullet {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 2px solid var(--brand-indigo-light);
+      flex-shrink: 0;
+      margin-top: 4px;
+      z-index: 1;
+    }
+
+    .history-text {
+      font-size: 0.95rem;
+      color: var(--text-body);
+      line-height: 1.5;
+    }
+
+    .orders-cta-box {
+      background: linear-gradient(135deg, var(--brand-indigo), var(--brand-indigo-deep));
+      border-radius: var(--radius-lg);
+      padding: 40px 32px;
+      color: white;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-md);
+    }
+
+    .cta-box-icon {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+
+    .cta-box-headline {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+
+    .cta-box-sub {
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.85);
+      margin-bottom: 32px;
+      line-height: 1.5;
+    }
+
+    .orders-cta-box .btn-primary {
+      background: white;
+      color: var(--brand-indigo-deep);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .orders-cta-box .btn-primary:hover {
+      background: #F8FAFC;
+    }
+
+    @media (max-width: 1024px) {
+      .table-container { overflow-x: auto; }
+      .table-header, .table-row { min-width: 800px; }
+      .orders-lower-inner { grid-template-columns: 1fr; gap: 32px; }
+    }
+
+    @media (max-width: 768px) {
+      .kpi-grid { grid-template-columns: 1fr 1fr; }
+      .orders-header { padding-top: 56px; }
+      .orders-headline { font-size: 2rem; }
+    }
+
+    @media (max-width: 480px) {
+      .kpi-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ═══════════════════════════════════════════
+       ACCOUNT SETTINGS PHASE 5
+    ═══════════════════════════════════════════ */
+    .settings-layout {
+      display: flex;
+      gap: 32px;
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 40px;
+    }
+
+    .settings-sidebar {
+      width: 250px;
+      flex-shrink: 0;
+    }
+
+    .settings-nav-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      color: var(--text-body);
+      font-weight: 500;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-bottom: 4px;
+      border-left: 3px solid transparent;
+    }
+
+    .settings-nav-item:hover {
+      background: var(--bg-elevated);
+      color: var(--text-heading);
+    }
+
+    .settings-nav-item.active {
+      background: var(--brand-indigo-bg);
+      color: var(--brand-indigo);
+      border-left-color: var(--brand-indigo);
+      font-weight: 600;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    }
+
+    .settings-panel-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .settings-panel-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 32px 40px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .settings-card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-heading);
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .settings-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-heading);
+    }
+
+    .form-input {
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      font-size: 0.95rem;
+      color: var(--text-heading);
+      background: var(--bg-card);
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--brand-indigo);
+      box-shadow: 0 0 0 2px var(--brand-indigo-bg);
+    }
+
+    .settings-cta-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 16px;
+    }
+
+    /* Billing specific */
+    .billing-plan-card {
+      border: 1px solid var(--brand-indigo-light);
+      background: var(--brand-indigo-bg);
+      border-radius: var(--radius-sm);
+      padding: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .billing-plan-info h4 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--brand-indigo-deep);
+      margin-bottom: 4px;
+    }
+
+    .billing-plan-info p {
+      font-size: 0.9rem;
+      color: var(--text-body);
+    }
+
+    .payment-method-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 24px;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      margin-bottom: 32px;
+    }
+
+    .payment-icon {
+      font-size: 1.5rem;
+    }
+
+    .payment-details {
+      flex: 1;
+    }
+
+    .payment-number {
+      font-weight: 600;
+      color: var(--text-heading);
+      font-size: 0.95rem;
+    }
+
+    .payment-expiry {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .payment-badge {
+      background: var(--bg-elevated);
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-body);
+    }
+
+    .invoice-table-wrapper {
+      overflow-x: auto;
+    }
+
+    .invoice-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    .invoice-table th {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      font-weight: 600;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .invoice-table td {
+      padding: 16px;
+      font-size: 0.9rem;
+      color: var(--text-heading);
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .invoice-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .invoice-link {
+      color: var(--brand-indigo);
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Jobsites specific */
+    .jobsite-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .jobsite-card {
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      padding: 20px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: border-color 0.2s ease;
+    }
+
+    .jobsite-card:hover {
+      border-color: var(--border-medium);
+    }
+
+    .jobsite-info h4 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-heading);
+      margin-bottom: 4px;
+    }
+
+    .jobsite-info p {
+      font-size: 0.85rem;
+      color: var(--text-body);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .jobsite-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--color-safe);
+    }
+
+    .jobsite-badge::before {
+      content: '';
+      display: block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--color-safe);
+    }
+
+    /* Account responsive */
+    @media (max-width: 768px) {
+      .settings-layout {
+        flex-direction: column;
+        padding: 24px;
+      }
+      .settings-sidebar {
+        width: 100%;
+        display: flex;
+        overflow-x: auto;
+        padding-bottom: 8px;
+        gap: 8px;
+        border-bottom: 1px solid var(--border-light);
+      }
+      .settings-nav-item {
+        white-space: nowrap;
+        margin-bottom: 0;
+        border-left: none;
+        border-bottom: 3px solid transparent;
+        border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+      }
+      .settings-nav-item.active {
+        border-bottom-color: var(--brand-indigo);
+        border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .settings-form-grid {
+        grid-template-columns: 1fr;
+      }
+      .settings-panel-card {
+        padding: 24px 20px;
+      }
+      .billing-plan-card, .jobsite-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+      }
+    }
+    .plan-details-dropdown {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-top: none;
+      border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+      padding: 0 24px;
+      margin-top: -32px; /* Pull it up under the card to look connected */
+      margin-bottom: 24px;
+      max-height: 0;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      opacity: 0;
+    }
+
+    .plan-details-dropdown.expanded {
+      padding: 24px;
+      max-height: 400px;
+      opacity: 1;
+      margin-top: -24px;
+      border-top: 1px dashed var(--border-light);
+    }
+
+    .plan-details-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .plan-stat {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .plan-stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+    }
+
+    .plan-stat-value {
+      font-size: 1.1rem;
+      color: var(--text-heading);
+      font-weight: 600;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .invoice-modal {
+      background: var(--bg-card);
+      width: 100%;
+      max-width: 600px;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      padding: 40px;
+      transform: translateY(20px) scale(0.95);
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .modal-overlay.active .invoice-modal {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      font-size: 1.5rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+    .modal-close:hover {
+      color: var(--text-heading);
+    }
+
+    .invoice-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 40px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .invoice-brand {
+      color: var(--brand-indigo-deep);
+      font-weight: 800;
+      font-size: 1.2rem;
+      margin-bottom: 4px;
+    }
+
+    .invoice-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--text-heading);
+    }
+
+    .invoice-meta {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 32px;
+    }
+
+    .invoice-meta-col {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .invoice-meta-title {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+
+    .invoice-meta-text {
+      font-size: 0.95rem;
+      color: var(--text-heading);
+    }
+
+    .invoice-items {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 32px;
+    }
+
+    .invoice-items th {
+      text-align: left;
+      padding: 12px 0;
+      border-bottom: 2px solid var(--border-light);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+    }
+
+    .invoice-items td {
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border-light);
+      color: var(--text-heading);
+    }
+
+    .invoice-items th.right, .invoice-items td.right {
+      text-align: right;
+    }
+
+    .invoice-total-row {
+      display: flex;
+      justify-content: flex-end;
+      padding-top: 16px;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--text-heading);
+    }
+
+    /* ═══════════════════════════════════════════
+       PHASE 6 — CONTACT PAGE
+    ═══════════════════════════════════════════ */
+    .contact-page-header {
+      background: var(--bg-page);
+      border-bottom: 1px solid var(--border-light);
+      padding: 64px 40px 48px;
+    }
+    .contact-page-header-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+    .contact-layout {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 48px 40px 80px;
+      align-items: start;
+    }
+    .contact-form-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      padding: 40px;
+    }
+    .contact-form-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-heading);
+      margin-bottom: 28px;
+    }
+    .contact-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .contact-form-grid .full {
+      grid-column: 1 / -1;
+    }
+    .contact-form-card .form-group { margin-bottom: 0; }
+    .contact-form-card .form-label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-body);
+      margin-bottom: 6px;
+      letter-spacing: 0.02em;
+    }
+    .contact-form-card .form-input,
+    .contact-form-card .form-select,
+    .contact-form-card .form-textarea {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: var(--text-heading);
+      background: var(--bg-page);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    .contact-form-card .form-input:focus,
+    .contact-form-card .form-select:focus,
+    .contact-form-card .form-textarea:focus {
+      border-color: var(--brand-indigo);
+      box-shadow: 0 0 0 3px var(--brand-indigo-glow);
+    }
+    .contact-form-card .form-textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+    .contact-form-card .form-select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2394A3B8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 36px;
+      cursor: pointer;
+    }
+    .contact-submit-wrap {
+      margin-top: 24px;
+    }
+    .contact-submit-wrap .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--brand-indigo), var(--brand-indigo-deep));
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .contact-submit-wrap .btn-submit:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35);
+    }
+    .contact-fine-print {
+      margin-top: 12px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+    .contact-success {
+      text-align: center;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    .contact-success-icon { font-size: 3rem; }
+    .contact-success h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-heading);
+    }
+    .contact-success p {
+      color: var(--text-body);
+      max-width: 380px;
+      line-height: 1.7;
+    }
+    .contact-info-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .contact-info-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+    .contact-info-card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-heading);
+      margin-bottom: 10px;
+    }
+    .contact-info-card p {
+      font-size: 0.9rem;
+      color: var(--text-body);
+      line-height: 1.6;
+    }
+    .contact-info-card a {
+      color: var(--brand-indigo);
+      font-weight: 600;
+    }
+    .contact-trust-card {
+      background: var(--brand-indigo-bg);
+      border: 1px solid rgba(99, 102, 241, 0.18);
+      border-radius: var(--radius-md);
+      padding: 24px;
+    }
+    .contact-trust-card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-heading);
+      margin-bottom: 16px;
+    }
+    .contact-quote-item {
+      padding: 12px 14px;
+      border-left: 3px solid var(--brand-indigo);
+      background: #fff;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      margin-bottom: 12px;
+    }
+    .contact-quote-item:last-child { margin-bottom: 0; }
+    .contact-quote-text {
+      font-size: 0.875rem;
+      color: var(--text-heading);
+      font-style: italic;
+      margin-bottom: 4px;
+      line-height: 1.5;
+    }
+    .contact-quote-role {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    /* FAQ */
+    .faq-section {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 40px 80px;
+    }
+    .faq-list {
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .faq-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+    .faq-question {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 24px;
+      cursor: pointer;
+      font-size: 0.975rem;
+      font-weight: 600;
+      color: var(--text-heading);
+      user-select: none;
+      transition: background 0.15s;
+      gap: 16px;
+    }
+    .faq-question:hover { background: var(--bg-elevated); }
+    .faq-chevron {
+      flex-shrink: 0;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .faq-item.open .faq-chevron { transform: rotate(180deg); }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s cubic-bezier(0.22, 1, 0.36, 1), padding 0.2s;
+      padding: 0 24px;
+      font-size: 0.9rem;
+      color: var(--text-body);
+      line-height: 1.75;
+    }
+    .faq-item.open .faq-answer {
+      max-height: 200px;
+      padding: 0 24px 20px;
+    }
+
+    /* Scroll-to-top button */
+    .scroll-top-btn {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--brand-indigo), var(--brand-indigo-deep));
+      color: #fff;
+      border: none;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(99, 102, 241, 0.4);
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.3s, transform 0.3s;
+      z-index: 150;
+      pointer-events: none;
+    }
+    .scroll-top-btn.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .scroll-top-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(99, 102, 241, 0.5);
+    }
+
+    /* 404 fallback */
+    .notfound-page {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 120px 40px;
+      text-align: center;
+      gap: 16px;
+    }
+    .notfound-code {
+      font-size: 5rem;
+      font-weight: 900;
+      color: var(--border-medium);
+      line-height: 1;
+    }
+    .notfound-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-heading);
+    }
+    .notfound-sub {
+      color: var(--text-muted);
+      max-width: 360px;
+    }
+
+    /* Contact responsive */
+    @media (max-width: 1024px) {
+      .contact-layout {
+        grid-template-columns: 1fr;
+        padding: 40px 32px 64px;
+      }
+      .contact-info-stack { order: -1; }
+    }
+    @media (max-width: 768px) {
+      .contact-page-header { padding: 48px 24px 36px; }
+      .contact-layout { padding: 32px 20px 60px; }
+      .contact-form-card { padding: 28px 20px; }
+      .contact-form-grid { grid-template-columns: 1fr; }
+      .faq-section { padding: 0 20px 60px; }
+    }
+    @media (max-width: 480px) {
+      .scroll-top-btn { bottom: 20px; right: 20px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <!-- ═══ TOP NAVIGATION ═══ -->
+    <nav class="top-nav" id="topNav">
+      <div class="nav-inner">
+        <a class="nav-brand" onclick="navigateTo('')" id="nav-brand">
+          <div class="nav-logo">VS</div>
+          <div class="nav-brand-text">
+            <span class="nav-brand-name">VitalShift</span>
+            <span class="nav-brand-sub">Ergonomics Intelligence</span>
+          </div>
+        </a>
+
+        <div class="nav-links" id="navLinks">
+          <a class="nav-link active" onclick="navigateTo('')" data-route="" id="nav-home">Home</a>
+          <a class="nav-link" onclick="navigateTo('mission')" data-route="mission" id="nav-mission">Mission</a>
+          <a class="nav-link" onclick="navigateTo('inventory')" data-route="inventory" id="nav-inventory">Inventory</a>
+          <a class="nav-link" onclick="navigateTo('contact')" data-route="contact" id="nav-contact">Contact</a>
+        </div>
+
+
+        <button class="mobile-menu-btn" onclick="toggleMobileNav()" id="mobile-menu-btn" aria-label="Open menu">☰</button>
+      </div>
+    </nav>
+
+    <!-- Mobile Nav Drawer -->
+    <div class="mobile-nav-overlay" id="mobileOverlay" onclick="closeMobileNav()"></div>
+    <div class="mobile-nav-drawer" id="mobileDrawer">
+      <button class="mobile-nav-close" onclick="closeMobileNav()" aria-label="Close menu">✕</button>
+      <div class="mobile-nav-links">
+        <a class="mobile-nav-link active" onclick="navigateTo(''); closeMobileNav();" data-route="" id="mobile-nav-home">Home</a>
+        <a class="mobile-nav-link" onclick="navigateTo('mission'); closeMobileNav();" data-route="mission" id="mobile-nav-mission">Mission</a>
+        <a class="mobile-nav-link" onclick="navigateTo('inventory'); closeMobileNav();" data-route="inventory" id="mobile-nav-inventory">Inventory</a>
+        <a class="mobile-nav-link" onclick="navigateTo('contact'); closeMobileNav();" data-route="contact" id="mobile-nav-contact">Contact</a>
+      </div>
+    </div>
+
+    <!-- ═══ PAGE CONTENT ═══ -->
+    <main class="page-content" id="pageContent">
+      <!-- Pages rendered here by router -->
+    </main>
+
+    <!-- ═══ FOOTER ═══ -->
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-grid">
+          <div class="footer-brand-section">
+            <div class="nav-logo" style="margin-bottom: 16px;">VS</div>
+            <p class="footer-brand-desc">
+              VitalShift provides cutting-edge wearable exoskeleton technology for the construction and industrial labor market. Protect your people. Reduce your costs.
+            </p>
+            <div class="footer-social">
+              <a href="#" class="footer-social-link" id="social-linkedin" aria-label="LinkedIn">in</a>
+              <a href="#" class="footer-social-link" id="social-twitter" aria-label="Twitter">𝕏</a>
+              <a href="#" class="footer-social-link" id="social-youtube" aria-label="YouTube">▶</a>
+            </div>
+          </div>
+
+          <div>
+            <h4 class="footer-col-title">Company</h4>
+            <ul class="footer-links">
+              <li><a href="#" onclick="navigateTo('mission')">About VitalShift</a></li>
+              <li><a href="#" onclick="navigateTo('contact')">Request a Demo</a></li>
+              <li><a href="#">Careers</a></li>
+              <li><a href="#">Blog</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="footer-col-title">Resources</h4>
+            <ul class="footer-links">
+              <li><a href="#">Documentation</a></li>
+              <li><a href="#">Safety Standards</a></li>
+              <li><a href="#">Integration Guide</a></li>
+              <li><a href="#">API Reference</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="footer-col-title">Contact</h4>
+            <ul class="footer-links">
+              <li><a href="mailto:hunter@vitalshiftsafety.com">hunter@vitalshiftsafety.com</a></li>
+              <li><a href="#" onclick="navigateTo('contact')">Request a Demo</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <span>© 2026 VitalShift Inc. All rights reserved.</span>
+          <div class="footer-legal-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Cookie Settings</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scroll-to-top button -->
+    <button class="scroll-top-btn" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Scroll to top">↑</button>
+  </div>
+
+  <script>
+    /* ═══════════════════════════════════════════
+       PRODUCT DATA
+    ═══════════════════════════════════════════ */
+    const products = [
+      {
+        id: 'herowear-apex-2',
+        name: 'HeroWear Apex 2',
+        icon: '🦾',
+        iconClass: 'product-icon-lift',
+        focus: 'Back + Core Support',
+        description: 'Ultra-light back-assist exosuit that reduces muscle exertion during lifting and forward-leaning tasks.',
+        price: 'Contact',
+      },
+      {
+        id: 'auxivo-liftsuit',
+        name: 'Auxivo LiftSuit',
+        icon: '👷',
+        iconClass: 'product-icon-flex',
+        focus: 'Back + Hip Support',
+        description: 'Textile passive exosuit that cuts back muscle activity by 33% during repetitive lifting.',
+        price: 'Contact',
+      },
+      {
+        id: 'hilti-exo-o1',
+        name: 'Hilti EXO-O1',
+        icon: '🛡️',
+        iconClass: 'product-icon-shield',
+        focus: 'Overhead + Shoulder',
+        description: 'Passive overhead exoskeleton from Hilti — delays arm and shoulder fatigue during installation work.',
+        price: 'Contact',
+      },
+      {
+        id: 'skelex-360',
+        name: 'Skelex 360',
+        icon: '⚙️',
+        iconClass: 'product-icon-arm',
+        focus: 'Shoulder + Arm',
+        description: 'Industry-leading shoulder exoskeleton trusted across construction, automotive, and agriculture.',
+        price: 'Contact',
+      },
+    ];
+
+    /* Expanded inventory product data */
+    const inventoryProducts = [
+      /* ── BACK & CORE ──────────────────────────────────────────────── */
+      {
+        id: 'herowear-apex-2',
+        name: 'HeroWear Apex 2',
+        icon: '🦾',
+        iconClass: 'product-icon-lift',
+        category: 'back-core',
+        categoryLabel: 'Back & Core',
+        price: 'Contact',
+        description: 'The Apex 2 from HeroWear is the lightest back-assist exosuit on the market. Worn like a backpack, it uses an elastic band mechanism to transfer load from the lower back to the legs during lifting and forward-leaning tasks. Machine-washable, one-size-adjustable, and designed for all-day comfort across construction, logistics, and manufacturing.',
+        chips: [
+          { icon: '⚙️', label: 'Passive (Elastic Band)' },
+          { icon: '⚖️', label: '1.6 kg (3.5 lbs)' },
+        ],
+        availability: 'in-stock',
+        availabilityLabel: '✓ In Stock',
+        searchText: 'herowear apex 2 back assist exosuit lifting leaning passive elastic band lightweight washable construction logistics manufacturing',
+      },
+      {
+        id: 'auxivo-liftsuit',
+        name: 'Auxivo LiftSuit',
+        icon: '👷',
+        iconClass: 'product-icon-flex',
+        category: 'back-core',
+        categoryLabel: 'Back & Core',
+        price: 'Contact',
+        description: 'Textile passive exoskeleton from Auxivo that reduces lower back and hip load during repetitive lifting and prolonged forward-leaning tasks. Cuts back muscle activity by 33% and hip fatigue by 44%. Machine-washable, provides up to 15 kg of lift assist — no batteries ever needed.',
+        chips: [
+          { icon: '⚙️', label: 'Passive (Elastic Textile)' },
+          { icon: '⚖️', label: '1.6 kg (3.5 lbs)' },
+        ],
+        availability: 'in-stock',
+        availabilityLabel: '✓ In Stock',
+        searchText: 'auxivo liftsuit back hip lifting leaning textile passive construction logistics manufacturing agriculture no battery washable',
+      },
+      /* ── SHOULDER & ARM ───────────────────────────────────────────── */
+      {
+        id: 'hilti-exo-o1',
+        name: 'Hilti EXO-O1',
+        icon: '🛡️',
+        iconClass: 'product-icon-shield',
+        category: 'shoulder-arm',
+        categoryLabel: 'Shoulder & Arm',
+        price: 'Contact',
+        description: 'Passive overhead exoskeleton from Hilti designed for construction jobsites. Weighing under 2 kg, it helps delay arm and shoulder muscle fatigue during long periods of overhead work — duct installation, sprinklers, piping, conduits, and drywall. No batteries needed, no motors to maintain.',
+        chips: [
+          { icon: '⚙️', label: 'Passive (Cable/Pulley)' },
+          { icon: '⚖️', label: 'Under 2 kg (4.4 lbs)' },
+        ],
+        availability: 'in-stock',
+        availabilityLabel: '✓ In Stock',
+        searchText: 'hilti exo-o1 overhead shoulder arm passive cable pulley construction duct sprinkler piping conduit drywall installation',
+      },
+      {
+        id: 'auxivo-deltasuit',
+        name: 'Auxivo DeltaSuit',
+        icon: '🔧',
+        iconClass: 'product-icon-shield',
+        category: 'shoulder-arm',
+        categoryLabel: 'Shoulder & Arm',
+        price: 'Contact',
+        description: 'Passive overhead exoskeleton from Auxivo engineered to reduce shoulder and neck strain during sustained arm-elevated tasks. Integrated spring elements deliver 33% lower shoulder muscle load and 75% lower neck muscle fatigue. Two selectable support levels adapt to task intensity throughout the shift.',
+        chips: [
+          { icon: '⚙️', label: 'Passive (Spring Elements)' },
+          { icon: '⚖️', label: '1.9 kg (4.2 lbs)' },
+        ],
+        availability: 'in-stock',
+        availabilityLabel: '✓ In Stock',
+        searchText: 'auxivo deltasuit shoulder arm overhead neck spring passive installation ceiling electrician drywaller construction manufacturing',
+      },
+      {
+        id: 'skelex-360',
+        name: 'Skelex 360',
+        icon: '⚙️',
+        iconClass: 'product-icon-arm',
+        category: 'shoulder-arm',
+        categoryLabel: 'Shoulder & Arm',
+        price: 'Contact',
+        description: "The industry-leading shoulder & arm exoskeleton from Skelex, trusted across construction, automotive, and agriculture for over 10 years. Adjustable arm-cup support of 1–4.9 kg per arm, weatherproof stainless steel frame rated for −20°C to +40°C. Proven to improve welding quality consistency by up to 15% (Fraunhofer Institute).",
+        chips: [
+          { icon: '⚙️', label: 'Passive (Gas Spring)' },
+          { icon: '⚖️', label: '2.85 kg (6.3 lbs)' },
+        ],
+        availability: 'in-stock',
+        availabilityLabel: '✓ In Stock',
+        searchText: 'skelex 360 shoulder arm overhead mid-range welding construction agriculture automotive adjustable weatherproof durable',
+      },
+      /* ── BACK & CORE + SHOULDER (multi-category) ──────────────────── */
+      {
+        id: 'auxivo-omnisuit',
+        name: 'Auxivo OmniSuit',
+        icon: '🦺',
+        iconClass: 'product-icon-orange',
+        category: 'back-core shoulder-arm',
+        categoryLabel: 'Back & Core + Shoulder',
+        price: 'Contact',
+        description: "Auxivo's multitask exoskeleton combining shoulder support for overhead work with back support for lifting and forward-leaning — all in one passive system. Covers the full vertical range from ground-level lifts to overhead installation. Reduces shoulder load by 33% and hip fatigue by 44%, no batteries needed.",
+        chips: [
+          { icon: '⚙️', label: 'Passive (Spring Elements)' },
+          { icon: '⚖️', label: '2.7 kg (6.0 lbs)' },
+        ],
+        availability: 'limited',
+        availabilityLabel: '⏳ Limited',
+        searchText: 'auxivo omnisuit back shoulder overhead lifting leaning multitask full range passive construction logistics manufacturing',
+      },
+    ];
+
+    /* ═══════════════════════════════════════════
+       PAGE TEMPLATES
+    ═══════════════════════════════════════════ */
+    function renderHomePage() {
+      return `
+        <!-- HERO -->
+        <section class="hero">
+          <div class="hero-inner">
+            <div class="hero-badge animate-in">
+              <span class="hero-badge-dot"></span>
+              Now Available — Q2 2026 Fleet Leasing
+            </div>
+            <h1 class="animate-in animate-in-delay-1">
+              Protect Your Workforce.<br/>
+              <span class="text-gradient">Power Your Bottom Line.</span>
+            </h1>
+            <p class="hero-sub animate-in animate-in-delay-2">
+              Industrial-grade wearable exoskeletons that reduce workplace injuries by 40% and save your company millions in strain-related costs. Lease the future of workforce safety.
+            </p>
+            <div class="hero-actions animate-in animate-in-delay-3">
+              <a class="btn btn-primary btn-large" onclick="navigateTo('inventory')" id="hero-cta-browse">
+                Browse Equipment
+                <span>→</span>
+              </a>
+              <a class="btn btn-secondary btn-large" onclick="navigateTo('contact')" id="hero-cta-demo">
+                Request a Demo
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- PRODUCT SHOWCASE -->
+        <section class="products-section" id="products-section">
+          <div class="section-header">
+            <span class="section-eyebrow animate-in">Equipment Catalog</span>
+            <h2 class="section-title animate-in animate-in-delay-1">Purpose-Built for Every Task</h2>
+            <p class="section-subtitle animate-in animate-in-delay-2">Four specialized exoskeleton systems designed for the demands of modern construction and industrial work.</p>
+          </div>
+          <div class="products-grid">
+            ${products.map((p, i) => `
+              <div class="product-card animate-in animate-in-delay-${i + 1}" id="product-${p.id}">
+                <div class="product-icon ${p.iconClass}">${p.icon}</div>
+                <div class="product-name">${p.name}</div>
+                <div class="product-focus">${p.focus}</div>
+                <div class="product-price">
+                  <span class="product-price-value">${typeof p.price === 'number' ? '$' + p.price : p.price}</span>
+                  <span class="product-price-period">${typeof p.price === 'number' ? '/mo' : ' for Pricing'}</span>
+                </div>
+                <a class="product-link" onclick="navigateTo('inventory')">
+                  Learn More <span class="product-link-arrow">→</span>
+                </a>
+              </div>
+            `).join('')}
+          </div>
+        </section>
+
+        <!-- STATS BANNER -->
+        <section class="stats-section" id="stats-section">
+          <div class="stats-grid">
+            <div class="stat-item animate-in">
+              <div class="stat-number"><span class="stat-counter" data-target="12000" data-prefix="" data-suffix="+">0</span><span class="stat-suffix">+</span></div>
+              <div class="stat-label">Shifts Protected</div>
+            </div>
+            <div class="stat-item animate-in animate-in-delay-1">
+              <div class="stat-number"><span class="stat-counter" data-target="200" data-prefix="" data-suffix="+">0</span><span class="stat-suffix">+</span></div>
+              <div class="stat-label">Active Sites</div>
+            </div>
+            <div class="stat-item animate-in animate-in-delay-2">
+              <div class="stat-number"><span class="stat-counter" data-target="40" data-prefix="" data-suffix="%">0</span><span class="stat-suffix">%</span></div>
+              <div class="stat-label">Injury Cost Reduction</div>
+            </div>
+            <div class="stat-item animate-in animate-in-delay-3">
+              <div class="stat-number"><span class="stat-prefix">$</span><span class="stat-counter" data-target="2.1" data-prefix="$" data-suffix="M" data-decimal="true">0</span><span class="stat-suffix">M</span></div>
+              <div class="stat-label">Strain Savings</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TESTIMONIAL + CTA -->
+        <section class="testimonial-section" id="testimonial-section">
+          <div class="testimonial-card animate-in">
+            <p class="testimonial-quote">
+              "Since deploying VitalShift exosuits across our three active sites, we've seen a 47% reduction in back strain reports and cut our workers' comp claims nearly in half. It's the best safety investment we've ever made."
+            </p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">DR</div>
+              <div class="testimonial-info">
+                <div class="testimonial-name">Diana Reyes</div>
+                <div class="testimonial-role">VP of Safety, Meridian Industrial Group</div>
+              </div>
+            </div>
+            <div class="testimonial-divider"></div>
+            <div class="cta-block">
+              <h3 class="cta-title">Ready to protect your crew?</h3>
+              <p class="cta-sub">Talk to our leasing team for a custom fleet proposal.</p>
+              <a class="btn btn-primary btn-large" onclick="navigateTo('contact')" id="cta-consultation">
+                Schedule a Consultation
+                <span>→</span>
+              </a>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderPlaceholderPage(title, phase, desc) {
+      return `
+        <div class="placeholder-page">
+          <div class="placeholder-card">
+            <div class="placeholder-logo">VS</div>
+            <div class="placeholder-phase">Phase ${phase}</div>
+            <h2 class="placeholder-title">${title}</h2>
+            <p class="placeholder-desc">${desc}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderMissionPage() {
+      return `
+        <!-- ═══ MISSION HERO ═══ -->
+        <section class="mission-hero">
+          <div class="mission-hero-inner">
+            <span class="section-eyebrow animate-in">OUR MISSION</span>
+            <h1 class="mission-hero-headline animate-in animate-in-delay-1">Help Workers Go Home Strong — Every Single Day</h1>
+            <p class="mission-hero-body animate-in animate-in-delay-2">
+              VitalShift is an exoskeleton equipment leasing company on a mission to bring increased safety and longevity to job sites. We believe every worker deserves to do their job with less muscle strain, less fatigue, and a lower risk of long-term injury — so they can keep working, keep earning, and keep living well later into life. We don't manufacture equipment. We curate, source, and lease the world's best wearable exoskeleton technology directly to construction and industrial teams — with zero large upfront cost.
+            </p>
+          </div>
+        </section>
+
+        <!-- ═══ VALUES GRID ═══ -->
+        <section class="values-section">
+          <div style="max-width: var(--max-width); margin: 0 auto;">
+            <div class="section-header" style="text-align: center; margin-bottom: 48px;">
+              <span class="section-eyebrow animate-in">WHAT WE STAND FOR</span>
+              <h2 class="section-title animate-in animate-in-delay-1">Principles That Drive Everything We Do</h2>
+            </div>
+            <div class="values-grid">
+              <div class="value-card animate-in">
+                <span class="value-card-icon">🛡️</span>
+                <div class="value-card-title">Worker Longevity</div>
+                <p class="value-card-desc">The goal isn't just fewer injuries on the clock — it's workers who can do the work they love for more years of their life.</p>
+              </div>
+              <div class="value-card animate-in animate-in-delay-1">
+                <span class="value-card-icon">💸</span>
+                <div class="value-card-title">No Big Upfront Cost</div>
+                <p class="value-card-desc">Leasing means world-class exoskeleton protection at a predictable monthly rate. No capital expense, no long-term hardware commitment.</p>
+              </div>
+              <div class="value-card animate-in animate-in-delay-2">
+                <span class="value-card-icon">🤝</span>
+                <div class="value-card-title">Partner Mindset</div>
+                <p class="value-card-desc">We don't just drop off equipment — we work alongside your safety team to ensure the right fit, the right onboarding, and real results.</p>
+              </div>
+              <div class="value-card animate-in animate-in-delay-1">
+                <span class="value-card-icon">🔎</span>
+                <div class="value-card-title">Best-in-Class Curation</div>
+                <p class="value-card-desc">We partner with the world's leading exoskeleton manufacturers — Skelex, Auxivo, and more — so you get proven technology, not prototypes.</p>
+              </div>
+              <div class="value-card animate-in animate-in-delay-2">
+                <span class="value-card-icon">📈</span>
+                <div class="value-card-title">Scalable Impact</div>
+                <p class="value-card-desc">From a 5-person crew pilot to a 500-worker fleet deployment, the VitalShift model scales without friction as your needs grow.</p>
+              </div>
+              <div class="value-card animate-in animate-in-delay-3">
+                <span class="value-card-icon">✅</span>
+                <div class="value-card-title">Honest Outcomes</div>
+                <p class="value-card-desc">We only lease equipment that's been independently validated. Every spec, every claim, every product in our catalog is backed by real field data.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══ HOW WE WORK ═══ -->
+        <section class="timeline-section" id="mission-how-it-works">
+          <div style="max-width: var(--max-width); margin: 0 auto;">
+            <div class="section-header" style="text-align: center; margin-bottom: 56px;">
+              <span class="section-eyebrow animate-in">THE PROCESS</span>
+              <h2 class="section-title animate-in animate-in-delay-1">How VitalShift Works</h2>
+              <p class="section-subtitle animate-in animate-in-delay-2" style="text-align: center; margin: 0 auto; max-width: 640px;">Getting exoskeleton protection on your job site is simpler than you think — from first conversation to first shift.</p>
+            </div>
+            <div class="timeline-wrapper">
+              <div class="timeline-track"></div>
+
+              <div class="timeline-item animate-in">
+                <div class="timeline-year-col">
+                  <span class="timeline-year-badge">01</span>
+                  <div class="timeline-dot"></div>
+                </div>
+                <div class="timeline-card">
+                  <p class="timeline-milestone"><strong>Assessment Call</strong> — We review your job site tasks, crew size, and the specific body areas being stressed most. You get a tailored equipment recommendation, not a generic catalog push.</p>
+                </div>
+              </div>
+
+              <div class="timeline-item animate-in animate-in-delay-1">
+                <div class="timeline-year-col">
+                  <span class="timeline-year-badge">02</span>
+                  <div class="timeline-dot"></div>
+                </div>
+                <div class="timeline-card">
+                  <p class="timeline-milestone"><strong>Equipment Fitting</strong> — We deliver and fit your selected exoskeleton units on site. Workers get hands-on training so they're comfortable and confident from shift one.</p>
+                </div>
+              </div>
+
+              <div class="timeline-item animate-in animate-in-delay-2">
+                <div class="timeline-year-col">
+                  <span class="timeline-year-badge">03</span>
+                  <div class="timeline-dot"></div>
+                </div>
+                <div class="timeline-card">
+                  <p class="timeline-milestone"><strong>Lease & Deploy</strong> — Equipment goes live on a simple monthly lease — no purchase, no depreciation, no maintenance headaches. Scale up or swap units as work scope changes.</p>
+                </div>
+              </div>
+
+              <div class="timeline-item animate-in animate-in-delay-3">
+                <div class="timeline-year-col">
+                  <span class="timeline-year-badge">04</span>
+                  <div class="timeline-dot"></div>
+                </div>
+                <div class="timeline-card">
+                  <p class="timeline-milestone"><strong>Ongoing Support</strong> — Your VitalShift account manager stays in contact, handles equipment issues, and helps you document safety improvements for compliance and insurance purposes.</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══ WHY IT MATTERS ═══ -->
+        <section class="team-section" id="mission-impact">
+          <div style="max-width: var(--max-width); margin: 0 auto;">
+            <div class="section-header" style="text-align: center; margin-bottom: 56px;">
+              <span class="section-eyebrow animate-in">THE STAKES</span>
+              <h2 class="section-title animate-in animate-in-delay-1">Why This Work Matters</h2>
+              <p class="section-subtitle animate-in animate-in-delay-2">Musculoskeletal injuries are the leading cause of early career exit in construction and industrial labor. They're also largely preventable.</p>
+            </div>
+            <div class="team-grid">
+              <div class="team-card animate-in">
+                <div class="team-avatar team-avatar-ev" style="font-size:1.6rem; font-weight:400;">🏗️</div>
+                <div class="team-name">1 in 3</div>
+                <div class="team-role">Workers affected</div>
+                <p class="team-bio">1 in 3 construction and industrial workers will experience a debilitating musculoskeletal injury during their career.</p>
+              </div>
+              <div class="team-card animate-in animate-in-delay-1">
+                <div class="team-avatar team-avatar-jo" style="font-size:1.6rem; font-weight:400;">💰</div>
+                <div class="team-name">$20B+</div>
+                <div class="team-role">Annual industry cost</div>
+                <p class="team-bio">Workplace musculoskeletal disorders cost U.S. employers over $20 billion annually in workers' compensation and lost productivity.</p>
+              </div>
+              <div class="team-card animate-in animate-in-delay-2">
+                <div class="team-avatar team-avatar-sc" style="font-size:1.6rem; font-weight:400;">📉</div>
+                <div class="team-name">Up to 75%</div>
+                <div class="team-role">Strain reduction possible</div>
+                <p class="team-bio">Validated exoskeleton technology can reduce specific muscle load and fatigue by up to 75%, depending on task and unit selected.</p>
+              </div>
+              <div class="team-card animate-in animate-in-delay-1">
+                <div class="team-avatar team-avatar-mr" style="font-size:1.6rem; font-weight:400;">📅</div>
+                <div class="team-name">~10 years</div>
+                <div class="team-role">Early exit age gap</div>
+                <p class="team-bio">Physical laborers retire an average of 10 years earlier than office workers — most due to cumulative physical wear, not choice.</p>
+              </div>
+              <div class="team-card animate-in animate-in-delay-2">
+                <div class="team-avatar team-avatar-pn" style="font-size:1.6rem; font-weight:400;">⚡</div>
+                <div class="team-name">Day 1</div>
+                <div class="team-role">Benefits start immediately</div>
+                <p class="team-bio">Unlike lifestyle interventions, exoskeleton support takes effect from the very first shift. No training period required for basic protection.</p>
+              </div>
+              <div class="team-card animate-in animate-in-delay-3">
+                <div class="team-avatar team-avatar-tl" style="font-size:1.6rem; font-weight:400;">🎯</div>
+                <div class="team-name">Our goal</div>
+                <div class="team-role">A longer working life</div>
+                <p class="team-bio">We want every worker who uses VitalShift equipment to reach their chosen retirement age — healthy, capable, and on their own terms.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══ BOTTOM CTA ═══ -->
+        <section class="mission-cta-section">
+          <div class="mission-cta-band animate-in">
+            <div class="mission-cta-band-inner">
+              <h2 class="mission-cta-title">Join the Safety Revolution</h2>
+              <p class="mission-cta-sub">Protect your people. Reduce your costs. Whether you're running a 5-person crew or a 500-worker fleet, VitalShift has a leasing solution built for your operation.</p>
+              <div class="mission-cta-actions">
+                <a class="btn btn-primary btn-large" onclick="navigateTo('inventory')" id="mission-cta-browse">
+                  Browse Equipment <span>→</span>
+                </a>
+                <a class="btn btn-secondary btn-large" onclick="navigateTo('contact')" id="mission-cta-contact">
+                  Talk to Our Team
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderInventoryPage() {
+      const cardsHtml = inventoryProducts.map((p, i) => `
+        <div
+          class="inventory-card animate-in animate-in-delay-${(i % 2) + 1}"
+          data-category="${p.category}"
+          data-name="${p.name.toLowerCase()}"
+          data-search="${p.searchText}"
+          id="inv-card-${p.id}"
+        >
+          <div class="inventory-card-body">
+            <!-- Header -->
+            <div class="inventory-card-header">
+              <div class="inv-icon ${p.iconClass}">${p.icon}</div>
+              <div class="inventory-card-title-group">
+                <div class="inventory-card-name">${p.name}</div>
+                <span class="category-badge">${p.categoryLabel}</span>
+              </div>
+            </div>
+
+            <!-- Description -->
+            <p class="inventory-card-desc">${p.description}</p>
+
+            <!-- Chip Lockup -->
+            <div class="inv-chips">
+              ${p.chips.map(c => `
+                <span class="inv-chip"><span class="inv-chip-icon">${c.icon}</span>${c.label}</span>
+              `).join('')}
+            </div>
+
+            <!-- Price + Availability -->
+            <div class="inventory-price-row">
+              <div class="inventory-price-block">
+                <div class="inventory-price-value">${typeof p.price === 'number' ? '$' + p.price + '<span style="font-size:1rem;font-weight:600;color:var(--text-muted);">/mo</span>' : '<span style="font-size:1.4rem;">Contact for Pricing</span>'}</div>
+                <div class="inventory-price-sub">Per unit, per month. Volume discounts available.</div>
+              </div>
+              <span class="availability-badge ${p.availability}">${p.availabilityLabel}</span>
+            </div>
+          </div>
+
+          <!-- CTA -->
+          <div class="inventory-card-footer">
+            <a
+              class="btn-lease"
+              onclick="navigateTo('contact')"
+              id="lease-btn-${p.id}"
+            >
+              Request Lease <span>→</span>
+            </a>
+          </div>
+        </div>
+      `).join('');
+
+      return `
+        <!-- ═══ INVENTORY HEADER ═══ -->
+        <section class="inventory-header">
+          <div class="inventory-header-inner">
+            <span class="section-eyebrow animate-in">EQUIPMENT CATALOG</span>
+            <h1 class="inventory-headline animate-in animate-in-delay-1">Find the Right Exoskeleton for Your Crew</h1>
+            <p class="inventory-subtext animate-in animate-in-delay-2">Match the right wearable to the right job role — compare specs, availability, and pricing across our full product lineup.</p>
+
+            <div class="filter-bar">
+              <div class="filter-tabs" id="filterTabs" role="tablist">
+                <button class="filter-tab active" data-filter="all" role="tab" id="filter-all" onclick="setInventoryFilter(this)">All Equipment</button>
+                <button class="filter-tab" data-filter="back-core" role="tab" id="filter-back-core" onclick="setInventoryFilter(this)">Back &amp; Core</button>
+                <button class="filter-tab" data-filter="shoulder-arm" role="tab" id="filter-shoulder-arm" onclick="setInventoryFilter(this)">Shoulder &amp; Arm</button>
+
+              </div>
+              <div class="search-bar">
+                <span class="search-bar-icon">🔍</span>
+                <input
+                  type="text"
+                  id="inventorySearch"
+                  placeholder="Search by name or use case…"
+                  autocomplete="off"
+                  oninput="filterInventoryCards()"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══ INVENTORY GRID ═══ -->
+        <section class="inventory-grid-section">
+          <div class="inventory-grid-inner">
+            <div class="inventory-grid" id="inventoryGrid">
+              ${cardsHtml}
+              <div class="inventory-empty" id="inventoryEmpty" style="display:none;">
+                <span class="inventory-empty-icon">🔎</span>
+                <p>No equipment matches your search. Try a different keyword or filter.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══ FLEET LEASING BANNER ═══ -->
+        <section class="fleet-banner-section">
+          <div class="fleet-banner animate-in">
+            <div class="fleet-banner-left">
+              <div class="fleet-banner-icon">🏗️</div>
+              <div class="fleet-banner-text">
+                <div class="fleet-banner-headline">Need 10+ Units? Build a Custom Fleet Package.</div>
+                <p class="fleet-banner-sub">Volume pricing, dedicated account management, and white-glove setup for teams of 10 to 500+</p>
+              </div>
+            </div>
+            <div class="fleet-banner-right">
+              <a class="btn-fleet-primary" onclick="navigateTo('contact')" id="fleet-talk-sales">Talk to Sales →</a>
+              <a class="btn-fleet-secondary" href="#" id="fleet-download-guide">↓ Download Fleet Guide</a>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    /* ═══════════════════════════════════════════
+       ORDERS DASHBOARD PHASE 4
+    ═══════════════════════════════════════════ */
+    function renderOrdersPage() {
+      const activeOrders = [
+        { id: 'LEASE-8842', product: 'Auxivo OmniSuit', quantity: 12, site: 'Site A: Downtown Highrise', renewal: 'Oct 15, 2026', statusLabel: 'Active', statusClass: 'status-active' },
+        { id: 'LEASE-8843', product: 'Skelex 360', quantity: 8, site: 'Site A: Downtown Highrise', renewal: 'Oct 15, 2026', statusLabel: 'Active', statusClass: 'status-active' },
+        { id: 'LEASE-8901', product: 'LiftAssist Pro', quantity: 15, site: 'Site B: Logistics Center', renewal: 'Nov 01, 2026', statusLabel: 'Active', statusClass: 'status-active' },
+        { id: 'LEASE-8902', product: 'FlexGuard Standard', quantity: 2, site: 'Site B: Logistics Center', renewal: 'Nov 01, 2026', statusLabel: 'Active', statusClass: 'status-active' },
+        { id: 'LEASE-9014', product: 'ShoulderShield Max', quantity: 5, site: 'Site C: Eastside Residential', renewal: '-', statusLabel: 'Pending Delivery', statusClass: 'status-pending' },
+        { id: 'REQ-0041', product: 'Auxivo OmniSuit', quantity: 1, site: 'Site A: Downtown Highrise', renewal: '-', statusLabel: 'Maintenance Swap', statusClass: 'status-pending' }
+      ];
+
+      const historyItems = [
+        "15 Units Delivered — Site B: Logistics Center (Sept 1, 2026)",
+        "On-site Fitting Completed — Site A: Downtown Highrise (Aug 15, 2026)",
+        "Lease Executed: 20 Units — Account wide (Aug 10, 2026)"
+      ];
+
+      const rowsHtml = activeOrders.map((order, i) => `
+        <div class="table-row animate-in animate-in-delay-${Math.min(i + 2, 4)}">
+          <div class="col-id">${order.id}</div>
+          <div class="col-product">${order.product}</div>
+          <div class="col-qty">${order.quantity} units</div>
+          <div class="col-site">${order.site}</div>
+          <div class="col-renewal">${order.renewal}</div>
+          <div class="col-status">
+            <span class="status-badge ${order.statusClass}">${order.statusLabel}</span>
+          </div>
+        </div>
+      `).join('');
+
+      const historyHtml = historyItems.map((item, i) => `
+        <li class="history-item animate-in animate-in-delay-${Math.min(i + 2, 4)}">
+          <span class="history-bullet"></span>
+          <span class="history-text">${item}</span>
+        </li>
+      `).join('');
+
+      return `
+        <!-- ═══ DASHBOARD HEADER ═══ -->
+        <section class="orders-header">
+          <div class="orders-header-inner">
+            <span class="section-eyebrow animate-in">FLEET DASHBOARD</span>
+            <h1 class="orders-headline animate-in animate-in-delay-1">Active Leases &amp; Deployed Units</h1>
+            <p class="orders-subtext animate-in animate-in-delay-2">Track your exoskeletons in the field, review upcoming renewals, and manage maintenance requests.</p>
+          </div>
+        </section>
+
+        <!-- ═══ KPI GRID ═══ -->
+        <section class="kpi-section">
+          <div class="kpi-grid">
+            <div class="kpi-card animate-in animate-in-delay-1">
+              <div class="kpi-label">Total Active Units</div>
+              <div class="kpi-val">42</div>
+            </div>
+            <div class="kpi-card animate-in animate-in-delay-2">
+              <div class="kpi-label">Monthly Lease Total</div>
+              <div class="kpi-val">$32,450</div>
+            </div>
+            <div class="kpi-card animate-in animate-in-delay-3">
+              <div class="kpi-label">Active Job Sites</div>
+              <div class="kpi-val">3</div>
+            </div>
+            <div class="kpi-card kpi-card-warning animate-in animate-in-delay-4">
+              <div class="kpi-label">Action Required</div>
+              <div class="kpi-val kpi-val-warning">1<span class="kpi-sub-val">Unit pending exchange</span></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══ ACTIVE FLEET TABLE ═══ -->
+        <section class="orders-fleet-section">
+          <div class="orders-fleet-inner animate-in animate-in-delay-1">
+            <h2 class="section-title-sm">Deployed Fleet Status</h2>
+            <div class="table-container">
+              <div class="table-header">
+                <div class="col-id">Order ID</div>
+                <div class="col-product">Product</div>
+                <div class="col-qty">Quantity</div>
+                <div class="col-site">Assigned Site</div>
+                <div class="col-renewal">Next Renewal</div>
+                <div class="col-status">Status</div>
+              </div>
+              <div class="table-body">
+                ${rowsHtml}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══ LOWER SECTION: HISTORY + CTA ═══ -->
+        <section class="orders-lower-section">
+          <div class="orders-lower-inner">
+            <div class="orders-history animate-in animate-in-delay-2">
+              <h2 class="section-title-sm">Recent Fulfillment History</h2>
+              <ul class="history-list">
+                ${historyHtml}
+              </ul>
+            </div>
+
+            <div class="orders-cta-box animate-in animate-in-delay-3">
+              <div class="cta-box-icon">🏗️</div>
+              <h3 class="cta-box-headline">Need to scale up or swap units?</h3>
+              <p class="cta-box-sub">Adjust your fleet as your job site demands shift.</p>
+              <a class="btn btn-primary" href="mailto:leasing@vitalshift.io?subject=Fleet%20Adjustment%20Request">Request Fleet Adjustment</a>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    /* ═══════════════════════════════════════════
+       ACCOUNT PAGE RENDERER
+    ═══════════════════════════════════════════ */
+    function renderAccountPage() {
+      const d = new Date();
+      d.setDate(d.getDate() + 14);
+      const nextInvoiceDate = d.toLocaleDateString('en-US', { month: 'long', day: '2-digit', year: 'numeric' });
+
+      return `
+        <div class="page-header animate-in">
+          <div class="container" style="padding-top: 40px; padding-bottom: 40px;">
+            <h1 class="section-title" style="text-align: left;">Account Settings</h1>
+            <p class="section-subtitle" style="margin: 0; max-width: none; text-align: left;">Manage your corporate profile, billing terms, and job sites.</p>
+          </div>
+        </div>
+
+        <div class="settings-layout">
+          <!-- Sidebar -->
+          <aside class="settings-sidebar animate-in animate-in-delay-1">
+            <div class="settings-nav-item active">General Profile</div>
+            <div class="settings-nav-item">Billing & Payments</div>
+            <div class="settings-nav-item">Job Sites</div>
+            <div class="settings-nav-item">Notifications & Security</div>
+          </aside>
+
+          <!-- Content Panels -->
+          <div class="settings-panel-container">
+            <!-- General Profile -->
+            <div class="settings-panel-card animate-in animate-in-delay-2">
+              <h2 class="settings-card-title">Organization Details</h2>
+              <div class="settings-form-grid">
+                <div class="form-group">
+                  <label class="form-label">Company Legal Name</label>
+                  <input type="text" class="form-input" value="Apex Construction Group" readonly />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Primary Administrator</label>
+                  <input type="text" class="form-input" value="Marcus Silva" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Contact Email</label>
+                  <input type="email" class="form-input" value="msilva@apexbuild.com" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Corporate Phone</label>
+                  <input type="tel" class="form-input" value="+1 (555) 019-3822" />
+                </div>
+              </div>
+              <div class="settings-cta-row">
+                <button class="btn btn-primary">Save Changes</button>
+              </div>
+            </div>
+
+            <!-- Billing & Payments -->
+            <div class="settings-panel-card animate-in animate-in-delay-3">
+              <h2 class="settings-card-title">Billing & Payment Methods</h2>
+              
+              <div class="billing-plan-card" style="z-index: 2; position: relative;">
+                <div class="billing-plan-info">
+                  <h4>Enterprise Fleet Package</h4>
+                  <p>Flexible leasing terms for large-scale deployments.</p>
+                </div>
+                <button class="btn btn-secondary" style="background: white;" onclick="togglePlanDetails()">Manage Plan</button>
+              </div>
+              
+              <div id="planDetails" class="plan-details-dropdown">
+                <div class="plan-details-grid">
+                  <div class="plan-stat">
+                    <span class="plan-stat-label">Active Units Limit</span>
+                    <span class="plan-stat-value">50 Exosuits</span>
+                  </div>
+                  <div class="plan-stat">
+                    <span class="plan-stat-label">Billing Cycle</span>
+                    <span class="plan-stat-value">Monthly</span>
+                  </div>
+                  <div class="plan-stat">
+                    <span class="plan-stat-label">Next Invoice Date</span>
+                    <span class="plan-stat-value">${nextInvoiceDate}</span>
+                  </div>
+                  <div class="plan-stat">
+                    <span class="plan-stat-label">Support Level</span>
+                    <span class="plan-stat-value">24/7 Priority SLA</span>
+                  </div>
+                </div>
+                <a href="#" class="invoice-link" style="font-size: 0.9rem;" onclick="return false;">📄 Download Master Service Agreement</a>
+              </div>
+
+              <h3 class="form-label" style="font-size: 1rem; margin-bottom: 16px;">Default Payment Method</h3>
+              <div class="payment-method-card">
+                <div class="payment-icon">💳</div>
+                <div class="payment-details">
+                  <div class="payment-number">Visa ending in 4242</div>
+                  <div class="payment-expiry">Expires 04/2028</div>
+                </div>
+                <div class="payment-badge">Default</div>
+              </div>
+
+              <h3 class="form-label" style="font-size: 1rem; margin-bottom: 16px;">Invoice History</h3>
+              <div class="invoice-table-wrapper">
+                <table class="invoice-table">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Description</th>
+                      <th>Amount</th>
+                      <th>Receipt</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Mar 01, 2026</td>
+                      <td>Monthly Fleet Lease</td>
+                      <td>$32,450.00</td>
+                      <td><a href="#" class="invoice-link" onclick='openInvoiceModal("INV-2026-03", "Mar 01, 2026", "$32,450.00", [{"desc":"LiftAssist Pro - Monthly","qty":24,"amt":"$10,800.00"},{"desc":"Flex-Core Exosuit - Monthly","qty":17,"amt":"$4,250.00"},{"desc":"Apex Upper-Body - Monthly","qty":1,"amt":"$1,200.00"},{"desc":"Premium Software Telemetry & SLA","qty":1,"amt":"$16,200.00"}]); return false;'>📄 PDF</a></td>
+                    </tr>
+                    <tr>
+                      <td>Feb 01, 2026</td>
+                      <td>Monthly Fleet Lease</td>
+                      <td>$32,450.00</td>
+                      <td><a href="#" class="invoice-link" onclick='openInvoiceModal("INV-2026-02", "Feb 01, 2026", "$32,450.00", [{"desc":"LiftAssist Pro - Monthly","qty":24,"amt":"$10,800.00"},{"desc":"Flex-Core Exosuit - Monthly","qty":17,"amt":"$4,250.00"},{"desc":"Apex Upper-Body - Monthly","qty":1,"amt":"$1,200.00"},{"desc":"Premium Software Telemetry & SLA","qty":1,"amt":"$16,200.00"}]); return false;'>📄 PDF</a></td>
+                    </tr>
+                    <tr>
+                      <td>Jan 15, 2026</td>
+                      <td>Ad-hoc Hardware Swap</td>
+                      <td>$850.00</td>
+                      <td><a href="#" class="invoice-link" onclick='openInvoiceModal("INV-2026-01B", "Jan 15, 2026", "$850.00", [{"desc":"Hardware Replacement Fee (Auxivo Omni)","qty":1,"amt":"$850.00"}]); return false;'>📄 PDF</a></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Job Sites -->
+            <div class="settings-panel-card animate-in animate-in-delay-4">
+              <h2 class="settings-card-title">Job Sites Management</h2>
+              
+              <div class="jobsite-list">
+                <div class="jobsite-card">
+                  <div class="jobsite-info">
+                    <h4>Downtown Highrise</h4>
+                    <p>150 Main St. • <span style="font-weight: 500; color: var(--text-heading);">24 Active Units</span></p>
+                  </div>
+                  <div class="jobsite-badge">Active</div>
+                </div>
+                
+                <div class="jobsite-card">
+                  <div class="jobsite-info">
+                    <h4>Logistics Center</h4>
+                    <p>8420 Industrial Pkwy • <span style="font-weight: 500; color: var(--text-heading);">17 Active Units</span></p>
+                  </div>
+                  <div class="jobsite-badge">Active</div>
+                </div>
+                
+                <div class="jobsite-card">
+                  <div class="jobsite-info">
+                    <h4>Eastside Residential</h4>
+                    <p>1102 East Ave • <span style="font-weight: 500; color: var(--text-heading);">1 Active Unit</span></p>
+                  </div>
+                  <div class="jobsite-badge">Active</div>
+                </div>
+              </div>
+
+              <button class="btn btn-secondary" style="width: 100%;">+ Register New Site</button>
+            </div>
+          </div>
+          </div>
+        </div>
+
+        <!-- Invoice Modal -->
+        <div id="invoiceModalOverlay" class="modal-overlay" onclick="closeInvoiceModal(event)">
+          <div class="invoice-modal" onclick="event.stopPropagation()">
+            <div class="modal-close" onclick="closeInvoiceModal()">×</div>
+            <div class="invoice-header">
+              <div>
+                <div class="invoice-brand">VITALSHIFT</div>
+                <div style="font-size: 0.9rem; color: var(--text-muted);">Ergonomics Intelligence</div>
+              </div>
+              <h2 class="invoice-title">INVOICE</h2>
+            </div>
+            
+            <div class="invoice-meta">
+              <div class="invoice-meta-col">
+                <span class="invoice-meta-title">Billed To</span>
+                <span class="invoice-meta-text"><strong>Apex Construction Group</strong></span>
+                <span class="invoice-meta-text" style="font-size: 0.85rem; color: var(--text-muted);">150 Main St, Suite 400<br>Downtown, CA 90210</span>
+              </div>
+              <div class="invoice-meta-col" style="text-align: right;">
+                <span class="invoice-meta-title">Invoice Number</span>
+                <span id="modalInvNum" class="invoice-meta-text" style="font-weight: 600; margin-bottom: 8px;">INV-2026-03</span>
+                <span class="invoice-meta-title">Date</span>
+                <span id="modalInvDate" class="invoice-meta-text">Mar 01, 2026</span>
+              </div>
+            </div>
+
+            <table class="invoice-items">
+              <thead>
+                <tr>
+                  <th>Description</th>
+                  <th class="right">Qty</th>
+                  <th class="right">Amount</th>
+                </tr>
+              </thead>
+              <tbody id="modalInvItemsBody">
+              </tbody>
+            </table>
+
+            <div class="invoice-total-row">
+              <span style="margin-right: 24px; color: var(--text-muted); font-size: 1rem; align-self: flex-end; padding-bottom: 4px;">Total Due:</span> <span id="modalInvTotal">$32,450.00</span>
+            </div>
+            
+            <div style="margin-top: 40px; border-top: 1px solid var(--border-light); padding-top: 16px; display: flex; justify-content: space-between; align-items: center;">
+              <span class="jobsite-badge">Paid</span>
+              <button class="btn btn-secondary" onclick="window.print()">Print PDF</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    /* ═══════════════════════════════════════════
+       ACCOUNT PAGE INTERACTIONS
+    ═══════════════════════════════════════════ */
+    window.togglePlanDetails = function() {
+      const el = document.getElementById('planDetails');
+      if (el) {
+        el.classList.toggle('expanded');
+      }
+    };
+
+    window.openInvoiceModal = function(invNum, date, amount, items) {
+      document.getElementById('modalInvNum').textContent = invNum;
+      document.getElementById('modalInvDate').textContent = date;
+      document.getElementById('modalInvTotal').textContent = amount;
+      
+      const tbody = document.getElementById('modalInvItemsBody');
+      if (items && items.length) {
+        tbody.innerHTML = items.map(item => `
+          <tr>
+            <td>${item.desc}</td>
+            <td class="right">${item.qty}</td>
+            <td class="right">${item.amt}</td>
+          </tr>
+        `).join('');
+      } else {
+        tbody.innerHTML = '';
+      }
+      
+      document.getElementById('invoiceModalOverlay').classList.add('active');
+    };
+
+    window.closeInvoiceModal = function(e) {
+      if (e && e.target !== e.currentTarget) return;
+      document.getElementById('invoiceModalOverlay').classList.remove('active');
+    };
+
+    /* ═══════════════════════════════════════════
+       ROUTER
+    ═══════════════════════════════════════════ */
+    const routes = {
+      '': { render: renderHomePage },
+      'mission': { render: renderMissionPage },
+      'inventory': { render: renderInventoryPage },
+      'orders': { render: renderOrdersPage },
+      'account': { render: renderAccountPage },
+      'contact': { render: renderContactPage },
+    };
+
+    /* ═══════════════════════════════════════════
+       CONTACT PAGE RENDERER
+    ═══════════════════════════════════════════ */
+    function renderContactPage() {
+      return `
+        <!-- ═══ PAGE HEADER ═══ -->
+        <section class="contact-page-header">
+          <div class="contact-page-header-inner">
+            <span class="section-eyebrow animate-in">GET IN TOUCH</span>
+            <h1 class="section-title animate-in animate-in-delay-1" style="text-align:center;">Ready to Protect Your Workforce?</h1>
+            <p class="section-subtitle animate-in animate-in-delay-2" style="text-align:center; margin:0 auto; max-width:640px;">Whether you need 5 units or 500, our team will build a leasing plan that fits your site, your crew, and your budget. No pressure, no pushy sales — just honest guidance.</p>
+          </div>
+        </section>
+
+        <!-- ═══ 2-COL LAYOUT ═══ -->
+        <div class="contact-layout">
+          <!-- Form -->
+          <div class="contact-form-card animate-in animate-in-delay-1">
+            <div id="contactFormWrap">
+              <div class="contact-form-title">Get in Touch</div>
+              <div class="contact-form-grid">
+                <div class="form-group">
+                  <label class="form-label" for="contactFirstName">First Name</label>
+                  <input type="text" id="contactFirstName" class="form-input" placeholder="First name" autocomplete="given-name" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="contactLastName">Last Name</label>
+                  <input type="text" id="contactLastName" class="form-input" placeholder="Last name" autocomplete="family-name" />
+                </div>
+                <div class="form-group full">
+                  <label class="form-label" for="contactEmail">Work Email *</label>
+                  <input type="email" id="contactEmail" class="form-input" placeholder="you@company.com" autocomplete="email" />
+                </div>
+                <div class="form-group full">
+                  <label class="form-label" for="contactCompany">Company Name</label>
+                  <input type="text" id="contactCompany" class="form-input" placeholder="Your company" autocomplete="organization" />
+                </div>
+                <div class="form-group full">
+                  <label class="form-label" for="contactPhone">Phone Number</label>
+                  <input type="tel" id="contactPhone" class="form-input" placeholder="+1 (555) 000-0000" autocomplete="tel" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="contactWorkers">Number of Workers</label>
+                  <select id="contactWorkers" class="form-select">
+                    <option value="">Select range…</option>
+                    <option>Under 20</option>
+                    <option>20–50</option>
+                    <option>50–100</option>
+                    <option>100–250</option>
+                    <option>250+</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="contactUseCase">Primary Use Case</label>
+                  <select id="contactUseCase" class="form-select">
+                    <option value="">Select industry…</option>
+                    <option>Construction / Highrise</option>
+                    <option>Warehousing / Logistics</option>
+                    <option>Manufacturing</option>
+                    <option>Healthcare / Patient Handling</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+                <div class="form-group full">
+                  <label class="form-label" for="contactMessage">Additional Notes</label>
+                  <textarea id="contactMessage" class="form-textarea" rows="4" placeholder="Tell us about your job site, crew size, or specific equipment concerns…"></textarea>
+                </div>
+              </div>
+              <div class="contact-submit-wrap">
+                <button class="btn-submit" onclick="submitContactForm()" id="contact-submit-btn">Send Message</button>
+                <p class="contact-fine-print">📩 We respond to all inquiries within 1 business day.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ FAQ ═══ -->
+        <section class="faq-section">
+          <div class="section-header" style="text-align:left; margin-bottom:0;">
+            <span class="section-eyebrow animate-in">COMMON QUESTIONS</span>
+            <h2 class="section-title animate-in animate-in-delay-1" style="text-align:left;">Everything You Need to Know</h2>
+          </div>
+          <div class="faq-list animate-in animate-in-delay-2">
+            <div class="faq-item" id="faq-1">
+              <div class="faq-question" onclick="toggleFaq(this)">
+                <span>How quickly can equipment be deployed?</span>
+                <span class="faq-chevron">▼</span>
+              </div>
+              <div class="faq-answer">Typically within 5–10 business days from a signed lease. For large fleet orders (50+ units), we align on a phased deployment schedule with your operations team.</div>
+            </div>
+            <div class="faq-item" id="faq-2">
+              <div class="faq-question" onclick="toggleFaq(this)">
+                <span>What's included in the monthly lease price?</span>
+                <span class="faq-chevron">▼</span>
+              </div>
+              <div class="faq-answer">Everything: equipment, delivery, on-site fitting, worker training, maintenance coverage, and access to your VitalShift account dashboard at no additional cost.</div>
+            </div>
+            <div class="faq-item" id="faq-3">
+              <div class="faq-question" onclick="toggleFaq(this)">
+                <span>Is there a minimum commitment period?</span>
+                <span class="faq-chevron">▼</span>
+              </div>
+              <div class="faq-answer">Our standard lease is month-to-month with a 30-day cancellation notice. We also offer 12-month terms at a reduced rate for clients who want price stability.</div>
+            </div>
+            <div class="faq-item" id="faq-4">
+              <div class="faq-question" onclick="toggleFaq(this)">
+                <span>Can we swap equipment if our job site changes?</span>
+                <span class="faq-chevron">▼</span>
+              </div>
+              <div class="faq-answer">Yes. Hardware swaps are included for Enterprise Fleet customers. Standard account holders can request exchanges directly through the Orders dashboard or by contacting their account manager.</div>
+            </div>
+            <div class="faq-item" id="faq-5">
+              <div class="faq-question" onclick="toggleFaq(this)">
+                <span>Do you work with public construction contracts?</span>
+                <span class="faq-chevron">▼</span>
+              </div>
+              <div class="faq-answer">Yes. We have experience with prevailing wage environments and public bid processes. We can provide all necessary compliance documentation, including safety certifications and product data sheets.</div>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    /* ═══════════════════════════════════════════
+       CONTACT FORM INTERACTIONS
+    ═══════════════════════════════════════════ */
+    window.submitContactForm = function() {
+      const emailEl = document.getElementById('contactEmail');
+      if (!emailEl || !emailEl.value.trim()) {
+        if (emailEl) {
+          emailEl.focus();
+          emailEl.style.borderColor = 'var(--color-danger)';
+          emailEl.style.boxShadow = '0 0 0 3px rgba(239,68,68,0.15)';
+          setTimeout(() => { emailEl.style.borderColor = ''; emailEl.style.boxShadow = ''; }, 2000);
+        }
+        return;
+      }
+      const firstName = document.getElementById('contactFirstName')?.value.trim() || 'there';
+      const wrap = document.getElementById('contactFormWrap');
+      if (wrap) {
+        wrap.innerHTML = `
+          <div class="contact-success">
+            <div class="contact-success-icon">✅</div>
+            <h2>Request Received!</h2>
+            <p>Thanks, ${firstName}! Your VitalShift account manager will be in touch within 1 business day.</p>
+          </div>
+        `;
+      }
+    };
+
+    /* ═══════════════════════════════════════════
+       FAQ ACCORDION
+    ═══════════════════════════════════════════ */
+    window.toggleFaq = function(questionEl) {
+      const item = questionEl.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    };
+
+    function getRoute() {
+      return location.hash.replace('#/', '').replace('#', '') || '';
+    }
+
+    function render404Page() {
+      return `
+        <div class="notfound-page">
+          <div class="notfound-code">404</div>
+          <div class="notfound-title">Page Not Found</div>
+          <p class="notfound-sub">The page you're looking for doesn't exist or has been moved.</p>
+          <a class="btn btn-primary" onclick="navigateTo('')" style="margin-top:12px;">← Go Home</a>
+        </div>
+      `;
+    }
+
+    function navigateTo(route) {
+      location.hash = '#/' + route;
+    }
+
+    function renderRoute() {
+      const route = getRoute();
+      const page = routes[route] || { render: render404Page };
+      const content = document.getElementById('pageContent');
+      content.innerHTML = page.render();
+
+      // Update active nav links
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.toggle('active', link.dataset.route === route);
+      });
+      document.querySelectorAll('.mobile-nav-link').forEach(link => {
+        link.classList.toggle('active', link.dataset.route === route);
+      });
+
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'instant' });
+
+      // Re-initialize animations
+      initScrollAnimations();
+
+      // Initialize count-up if on home
+      if (route === '') {
+        initCountUp();
+      }
+
+      // Initialize inventory filters if on inventory page
+      if (route === 'inventory') {
+        initInventoryFilters();
+      }
+    }
+
+    window.addEventListener('hashchange', renderRoute);
+
+    /* ═══════════════════════════════════════════
+       SCROLL ANIMATIONS  (IntersectionObserver)
+    ═══════════════════════════════════════════ */
+    function initScrollAnimations() {
+      const elements = document.querySelectorAll('.animate-in');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.animationPlayState = 'running';
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+      elements.forEach(el => {
+        el.style.animationPlayState = 'paused';
+        observer.observe(el);
+      });
+    }
+
+    /* ═══════════════════════════════════════════
+       COUNT-UP ANIMATION
+    ═══════════════════════════════════════════ */
+    function initCountUp() {
+      const counters = document.querySelectorAll('.stat-counter');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            animateCounter(entry.target);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.3 });
+
+      counters.forEach(counter => observer.observe(counter));
+    }
+
+    function animateCounter(el) {
+      const target = parseFloat(el.dataset.target);
+      const isDecimal = el.dataset.decimal === 'true';
+      const duration = 2000;
+      const startTime = performance.now();
+
+      function easeOutExpo(t) {
+        return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+      }
+
+      function update(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const easedProgress = easeOutExpo(progress);
+        const current = target * easedProgress;
+
+        if (isDecimal) {
+          el.textContent = current.toFixed(1);
+        } else {
+          el.textContent = Math.floor(current).toLocaleString();
+        }
+
+        if (progress < 1) {
+          requestAnimationFrame(update);
+        } else {
+          if (isDecimal) {
+            el.textContent = target.toFixed(1);
+          } else {
+            el.textContent = target.toLocaleString();
+          }
+        }
+      }
+
+      requestAnimationFrame(update);
+    }
+
+    /* ═══════════════════════════════════════════
+       INVENTORY FILTERS + SEARCH
+    ═══════════════════════════════════════════ */
+    let _activeFilter = 'all';
+
+    function setInventoryFilter(tabEl) {
+      _activeFilter = tabEl.dataset.filter;
+      // Update tab active state
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+      tabEl.classList.add('active');
+      filterInventoryCards();
+    }
+
+    function filterInventoryCards() {
+      const query = (document.getElementById('inventorySearch')?.value || '').toLowerCase().trim();
+      const cards = document.querySelectorAll('.inventory-card');
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const categoryMatch = _activeFilter === 'all' || card.dataset.category.split(' ').includes(_activeFilter);
+        const searchText = (card.dataset.name + ' ' + card.dataset.search).toLowerCase();
+        const searchMatch = !query || searchText.includes(query);
+        const visible = categoryMatch && searchMatch;
+        card.classList.toggle('hidden', !visible);
+        if (visible) visibleCount++;
+      });
+
+      const empty = document.getElementById('inventoryEmpty');
+      if (empty) empty.style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+
+    function initInventoryFilters() {
+      // Reset filter state on each page load
+      _activeFilter = 'all';
+      filterInventoryCards();
+    }
+
+    /* ═══════════════════════════════════════════
+       NAV SCROLL EFFECT
+    ═══════════════════════════════════════════ */
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      const nav = document.getElementById('topNav');
+      if (window.scrollY > 10) {
+        nav.classList.add('scrolled');
+      } else {
+        nav.classList.remove('scrolled');
+      }
+      lastScroll = window.scrollY;
+    });
+
+    /* ═══════════════════════════════════════════
+       MOBILE NAV
+    ═══════════════════════════════════════════ */
+    function toggleMobileNav() {
+      const overlay = document.getElementById('mobileOverlay');
+      const drawer = document.getElementById('mobileDrawer');
+      overlay.classList.toggle('active');
+      drawer.classList.toggle('active');
+      document.body.style.overflow = drawer.classList.contains('active') ? 'hidden' : '';
+    }
+
+    function closeMobileNav() {
+      const overlay = document.getElementById('mobileOverlay');
+      const drawer = document.getElementById('mobileDrawer');
+      overlay.classList.remove('active');
+      drawer.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    /* ═══════════════════════════════════════════
+       SCROLL-TO-TOP BUTTON
+    ═══════════════════════════════════════════ */
+    window.addEventListener('scroll', () => {
+      const btn = document.getElementById('scrollTopBtn');
+      if (!btn) return;
+      if (window.scrollY > 300) {
+        btn.classList.add('visible');
+      } else {
+        btn.classList.remove('visible');
+      }
+    });
+
+    /* ═══════════════════════════════════════════
+       INIT
+    ═══════════════════════════════════════════ */
+    document.addEventListener('DOMContentLoaded', () => {
+      renderRoute();
+    });
+
+    // Handle direct load without hash
+    if (!location.hash) {
+      location.hash = '#/';
+    }
+  </script>
+</body>
+</html>
